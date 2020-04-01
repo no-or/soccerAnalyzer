@@ -13,7 +13,7 @@ node version 10.16.0 <br />
 latest mysql docker image <br />
 yarn <br />
 
-### Backend code found in public/soccer-stats-app.js
+#### Backend code found in public/soccer-stats-app.js
 
 
 ## Trouble shooting
@@ -25,12 +25,12 @@ https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-a
 
 ## Available Scripts
 
-To run dev mode:
-### yarn electron-dev
+### To run dev mode:
+yarn electron-dev
 
 
-To compile project for distribution:
-### yarn electron-pack
+### To compile project for distribution:
+yarn electron-pack
 
 
 ## Learn More
