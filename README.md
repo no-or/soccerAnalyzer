@@ -1,17 +1,17 @@
 ## To run
 
-run:
-yarn 
+run: <br />
+yarn <br />
 
-run:
-yarn electron-dev
+run: <br />
+yarn electron-dev <br />
 
 
 ## Dependencies
 
-node version 10.16.0
-latest mysql docker image
-yarn
+node version 10.16.0 <br />
+latest mysql docker image <br />
+yarn <br />
 
 ### Backend code found in public/soccer-stats-app.js
 
@@ -34,6 +34,7 @@ To compile project for distribution:
 
 
 ## Learn More
+
 
 Electron architecture:
 https://www.electronjs.org/docs/tutorial/application-architecture#main-and-renderer-processes
