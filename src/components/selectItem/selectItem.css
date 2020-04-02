@@ -1,0 +1,22 @@
+.select-container {
+  white-space: nowrap;
+  overflow-x: auto;
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.select-label {
+  /* display: inline-block; */
+  /* align-self: flex-start; */
+  /* flex-grow: 1; */
+  padding-right: 8px;
+}
+
+.select-dropdown {
+  /* display: inline-block; */
+  /* flex-grow: 1; */
+  /* align-self: flex-end; */
+}

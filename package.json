@@ -3,15 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@paprika/button": "^0.2.19",
+    "@paprika/date-picker": "^0.5.22",
+    "@paprika/dropdown-menu": "^2.0.17",
+    "@paprika/input": "^0.2.19",
+    "@paprika/l10n": "^0.3.13",
+    "@paprika/select": "^0.2.12",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "electron-is-dev": "^1.1.0",
+    "flatpickr": "^4.6.3",
+    "mysql": "^2.18.1",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
+    "react-datetime-picker": "^3.0.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "yarn": "^1.22.4",
-    "mysql": "^2.18.1"
+    "styled-components": "^5.0.1",
+    "yarn": "^1.22.4"
   },
   "scripts": {
     "start": "rescripts start",
