@@ -1,7 +1,6 @@
 const mysql = require("mysql");
 
-
-console.log('running soccer stats BE');
+console.log("running soccer stats BE");
 //Create connection
 var connection = mysql.createConnection({
   host: "localhost",
@@ -18,6 +17,13 @@ connection.connect(err => {
   console.log("MySql connected . . .");
 });
 
+// createDB();
+
+ipcMain.on("synchronous-message", (event, arg) => {
+  console.log(arg); // prints "ping"
+  creatDB();
+  event.returnValue = "pong";
+});
 
 //Create DB
 function creatDB() {

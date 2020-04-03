@@ -8,6 +8,7 @@
     "@paprika/dropdown-menu": "^2.0.17",
     "@paprika/input": "^0.2.19",
     "@paprika/l10n": "^0.3.13",
+    "@paprika/modal": "^0.2.12",
     "@paprika/select": "^0.2.12",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",

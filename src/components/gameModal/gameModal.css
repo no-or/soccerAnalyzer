@@ -1,0 +1,63 @@
+.App {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  padding: 8px;
+}
+
+.input-container {
+  white-space: nowrap;
+  /* overflow-x: auto; */
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  color: #3f3d3c !important;
+}
+
+.input-label {
+  /* display: inline-block; */
+  padding-right: 8px;
+}
+
+.input-score {
+  max-width: 40px;
+}
+/* .react-datetime-picker__inputGroup__input {
+  width: 17px !important;
+} */
+.react-datetime-picker__inputGroup__day {
+  width: 17px !important;
+}
+.react-datetime-picker__inputGroup__hour {
+  width: 17px !important;
+}
+/* #3f3d3c */
+.date-picker {
+  color: #3f3d3c !important;
+  font: 400 15px system-ui !important;
+  /* font-style: inherit; */
+}
+
+.react-datetime-picker__inputGroup__input {
+  color: #3f3d3c !important;
+}
+
+.react-datetime-picker__wrapper {
+  /* border-radius: 2px; */
+  /* border-color: #3f3d3c !important; */
+  border: 1px solid #d7d7d7;
+  border-radius: 3px;
+}
+
+.selection-container {
+  border: #89cff0;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 2px;
+  max-width: 80%;
+  min-width: 60%;
+  padding: 16px;
+  margin: 16px;
+}
