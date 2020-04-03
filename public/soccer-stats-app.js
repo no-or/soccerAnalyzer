@@ -19,11 +19,11 @@ connection.connect(err => {
 
 // createDB();
 
-ipcMain.on("synchronous-message", (event, arg) => {
-  console.log(arg); // prints "ping"
-  creatDB();
-  event.returnValue = "pong";
-});
+// ipcMain.on("anyname", (event, arg) => {
+//   console.log(arg); // prints "ping"
+//   creatDB();
+//   event.returnValue = "pong";
+// });
 
 //Create DB
 function creatDB() {

@@ -110,10 +110,6 @@ export default function GameModal() {
         </Modal.Content>
         <Modal.Footer>
           <Button kind="primary">Insert</Button>
-          {/* <Button>Secondary</Button> */}
-          {/* <Button kind="minor" onClick={toggle}>
-            Cancel
-          </Button> */}
         </Modal.Footer>
       </Modal>
     </div>

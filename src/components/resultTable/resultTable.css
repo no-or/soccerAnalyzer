@@ -1,0 +1,33 @@
+#results {
+  text-align: center;
+  /* font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+   */
+  font: 400 15px system-ui;
+  /* border-collapse: collapse; */
+  border: 2px solid #89cff0;
+  border-radius: 10px;
+  width: 50%;
+}
+
+#results td,
+#results th {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 8px;
+}
+
+/* #results tr:nth-child(even) {
+  background-color: #89cff0;
+} */
+
+#results tr:hover {
+  background-color: #eeeeee;
+}
+
+#results th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: white;
+  color: black;
+}
