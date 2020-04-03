@@ -1,12 +1,11 @@
 const mysql = require("mysql");
 
-
-console.log('running soccer stats BE');
+console.log("running soccer stats BE");
 //Create connection
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  port: 3308,
+  port: 3306,
   password: "1122334455",
   database: "db"
 });
@@ -17,7 +16,6 @@ connection.connect(err => {
   }
   console.log("MySql connected . . .");
 });
-
 
 //Create DB
 function creatDB() {
@@ -30,6 +28,9 @@ function creatDB() {
     return "Database created . . . .";
   });
 }
+
+// initialize the DB
+creatDB();
 
 //Create Table TEST
 function creatTable() {
