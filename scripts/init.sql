@@ -248,16 +248,16 @@ VALUES
 INSERT INTO PLAYER
     (playerID, name, leagueName, clubName, number, birthdate, heightCM, weightKG, goals, assists, numRedCards, numYellowCards)
 VALUES
-    (1000, 'Mohamed Salah', 'English Premier League', 'Liverpool F.C.', 11, NULL, NULL, NULL, 167, 37, 1, 17),
-    (1001, 'Alisson Becker', 'English Premier League', 'Liverpool F.C.', 1, NULL, NULL, NULL, 0, 0, 1, 7),
-    (2000, 'Lionel Messi', 'La Liga', 'FC Barcelona', 10, NULL, NULL, NULL, 626, 261, 0, 73),
-    (2001, 'Marc-André ter Stegen', 'La Liga', 'FC Barcelona', 1, NULL, NULL, NULL, 0, 0, 0, 13),
-    (3000, 'Serge Gnabryh', 'Bundesliga', 'FC Bayern Munich', 22, NULL, NULL, NULL, 71, 41, 0, 4),
-    (3001, 'Manuel Neuer', 'Bundesliga', 'FC Bayern Munich', 1, NULL, NULL, NULL, 0, 0, 0, 19),
-    (4000, 'Christiano Ronaldo', 'Serie A', 'Juventus F.C.', 7, NULL, NULL, NULL, 626, 214, 11, 98),
-    (4001, 'Wojciech Szczesny', 'Serie A', 'Juventus F.C.', 1, NULL, NULL, NULL, 0, 0, 2, 17),
-    (5000, 'Neymar da Silva Santos Júnior', 'Ligue 1', 'Paris Saint-Germain F.C.', 10, NULL, NULL, NULL, 242, 151, 6, 103),
-    (5001, 'Keylor Navas', 'Ligue 1', 'Paris Saint-Germain F.C.', 1, NULL, NULL, NULL, 0, 0, 1, 14);
+    ('1000', 'Mohamed Salah', 'English Premier League', 'Liverpool F.C.', 11, NULL, NULL, NULL, 167, 37, 1, 17),
+    ('1001', 'Alisson Becker', 'English Premier League', 'Liverpool F.C.', 1, NULL, NULL, NULL, 0, 0, 1, 7),
+    ('2000', 'Lionel Messi', 'La Liga', 'FC Barcelona', 10, NULL, NULL, NULL, 626, 261, 0, 73),
+    ('2001', 'Marc-André ter Stegen', 'La Liga', 'FC Barcelona', 1, NULL, NULL, NULL, 0, 0, 0, 13),
+    ('3000', 'Serge Gnabryh', 'Bundesliga', 'FC Bayern Munich', 22, NULL, NULL, NULL, 71, 41, 0, 4),
+    ('3001', 'Manuel Neuer', 'Bundesliga', 'FC Bayern Munich', 1, NULL, NULL, NULL, 0, 0, 0, 19),
+    ('4000', 'Christiano Ronaldo', 'Serie A', 'Juventus F.C.', 7, NULL, NULL, NULL, 626, 214, 11, 98),
+    ('4001', 'Wojciech Szczesny', 'Serie A', 'Juventus F.C.', 1, NULL, NULL, NULL, 0, 0, 2, 17),
+    ('5000', 'Neymar da Silva Santos Júnior', 'Ligue 1', 'Paris Saint-Germain F.C.', 10, NULL, NULL, NULL, 242, 151, 6, 103),
+    ('5001', 'Keylor Navas', 'Ligue 1', 'Paris Saint-Germain F.C.', 1, NULL, NULL, NULL, 0, 0, 1, 14);
 
 
 INSERT INTO FIELD_PLAYER
