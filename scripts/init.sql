@@ -9,21 +9,13 @@ CREATE TABLE LEAGUE
 );
 
 
-/* having circular foreign keys (Club2->Manager & Manager->Club2) is not recommended and 
-its throwing an error here so commented Manager->Club out to make it simpler and error free */
 CREATE TABLE MANAGER
 (
     managerID VARCHAR(7) PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
-    /*clubName VARCHAR(40),
-    leagueName VARCHAR(40),*/
     numCareerWins INTEGER,
     numCareerLoses INTEGER,
     numCareerDraws INTEGER
-    /*FOREIGN KEY (clubName, leagueName)
-        REFERENCES CLUB2 (name, leagueName)
-        ON UPDATE CASCADE
-        ON DELETE SET NULL*/
 );
 
 
@@ -48,8 +40,6 @@ CREATE TABLE CLUB2
         REFERENCES LEAGUE (name, country)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    /* Changed this from SET NULL to CASCADE otherwise it throws an error as  
-        leagueName is part of the primary key and can't be NULL */
     FOREIGN KEY (managerID)
         REFERENCES MANAGER (managerID)
         ON UPDATE CASCADE
@@ -186,22 +176,15 @@ CREATE TABLE PENALTY
         REFERENCES PLAYER (playerID)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    /* Changed this from SET NULL to CASCADE otherwise it throws an error as  
-        playerID is part of the primary key and can't be NULL */
     FOREIGN KEY (refID)
         REFERENCES REFEREE (refID)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    /* Changed this from SET NULL to CASCADE otherwise it throws an error as  
-        refID is part of the primary key and can't be NULL */
     FOREIGN KEY (gameID)
         REFERENCES GAME2 (gameID)
         ON UPDATE CASCADE
         ON DELETE CASCADE
-    /* Changed this from SET NULL to CASCADE otherwise it throws an error as  
-        gameID is part of the primary key and can't be NULL */
 );
-
 
 
 COMMIT;
