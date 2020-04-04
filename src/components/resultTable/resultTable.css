@@ -16,10 +16,6 @@
   padding: 8px;
 }
 
-/* #results tr:nth-child(even) {
-  background-color: #89cff0;
-} */
-
 #results tr:hover {
   background-color: #eeeeee;
 }

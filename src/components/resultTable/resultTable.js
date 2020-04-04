@@ -5,7 +5,9 @@ import "./resultTable.css";
 function TableHeader({ results }) {
   let header = Object.keys(results[0]);
   let tableTopRow = header.map((key, index) => {
-    return <th key={index}>{key.toUpperCase()}</th>;
+    if (key.toUpperCase() !== "ID") {
+      return <th key={index}>{key.toUpperCase()}</th>;
+    }
   });
   return tableTopRow;
 }
@@ -13,7 +15,7 @@ function TableHeader({ results }) {
 function TableData({ results, onUpdate, onDelete }) {
   return results.map(result => {
     const { id } = result;
-    console.log("idsssss: " + id);
+    // console.log("idsssss: " + id);
     return (
       <tr key={id}>
         <TableAttributes result={result} />
@@ -35,12 +37,17 @@ function TableData({ results, onUpdate, onDelete }) {
 function TableAttributes({ result }) {
   let attributes = Object.keys(result);
   let row = attributes.map(attribute => {
-    return <td>{result[attribute]}</td>;
+    if (attribute.toUpperCase() !== "ID") {
+      return <td>{result[attribute]}</td>;
+    }
   });
   return row;
 }
 
 export default function ResultTable({ results, onUpdate, onDelete }) {
+  if (!results || results.length == 0) {
+    return <div></div>;
+  }
   return (
     <div>
       <table id="results">

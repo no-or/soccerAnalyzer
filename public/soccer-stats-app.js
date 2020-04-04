@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const ShortUniqueId = require("short-unique-id").default;
+// const frontEndComm = require("./front-end-communication.js");
 
 console.log("running soccer stats BE");
 //Create connection
@@ -8,6 +9,7 @@ var connection = mysql.createConnection({
   user: "root",
   password: "1122334455",
   database: "db"
+  // port: 3308
 });
 
 connection.connect(err => {
@@ -33,7 +35,7 @@ function creatDB() {
 }
 
 // initialize the DB
-creatDB();
+// creatDB();
 
 //Insert data into a Game table - inserts both in GAME1 AND GAME2
 //data is an object with all the required attributes
@@ -102,16 +104,26 @@ const getLocByClubName = clubName => {
 };
 
 // Get All Games
-const getAllGames = () => {
-  let sql = `SELECT * FROM GAME2`;
-
-  connection.query(sql, (err, result) => {
-    if (err) {
-      return { status: 500, res: err };
-    }
-
-    return { status: 200, res: result };
+const getAllGames = async () => {
+  let promise = new Promise(function(resolve, reject) {
+    let sql = `SELECT gameID, UNIX_TIMESTAMP(date) AS epoch_time, c1Name, c2Name, leagueName FROM GAME2`;
+    connection.query(sql, (err, result) => {
+      if (err) {
+        reject({ status: 500, res: err });
+      }
+      let res = result.map(res => {
+        let { epoch_time, ...r } = res;
+        let formattedDate = new Date(epoch_time * 1000).toUTCString();
+        return {
+          id: r.gameID,
+          date: formattedDate,
+          ...r
+        };
+      });
+      resolve({ status: 200, res: res });
+    });
   });
+  return promise;
 };
 
 // Get games by leagueName
@@ -223,3 +235,5 @@ const formatDate = currentDate => {
 
   return currentDate.toISODate();
 };
+
+module.exports.getAllGames = getAllGames;
