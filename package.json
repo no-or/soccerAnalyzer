@@ -20,6 +20,7 @@
     "react-datetime-picker": "^3.0.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "short-unique-id": "^2.0.6",
     "styled-components": "^5.0.1",
     "yarn": "^1.22.4"
   },
