@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import { useEffect, useState } from "react";
+import Button from "@paprika/button";
 import GameModal from "./components/gameModal/gameModal";
 import ResultTable from "./components/resultTable/resultTable";
 const { ipcRenderer } = require("electron");
@@ -22,11 +23,29 @@ function App() {
     // callBackend();
   });
 
+  const [isOpen, setIsOpen] = React.useState(false);
+  const toggle = () => {
+    setIsOpen(state => !state);
+  };
+
   return (
     <div>
-      <h3>Insert New Game</h3>
-      <GameModal />
-      <ResultTable results={results} />
+      <h3>Insert, update and delete games:</h3>
+      <div style={{ padding: "8px" }}>
+        <span>Insert a New Game: </span>
+        <Button onClick={toggle}>Insert Game</Button>
+      </div>
+      <GameModal isOpen={isOpen} handleClose={toggle} />
+      <ResultTable
+        results={results}
+        onUpdate={id => {
+          toggle();
+          console.log("table button: " + id);
+        }}
+        onDelete={id => console.log("table button: " + id)}
+      />
+      {/* <ResultTable results={results} />
+      <ResultTable results={results} /> */}
     </div>
   );
 }
