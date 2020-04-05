@@ -137,6 +137,26 @@ const getPlayers = (req) => {
   return promise;
 };
 
+// Nested Aggregation
+const getAvgGoalsPerPlayerPerClub = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT clubName, leagueName, AVG(goals) AS avgGoalsPerPlayer ' +
+                  'FROM player ' +
+                  'GROUP BY clubName ' +
+                  'ORDER BY leagueName';
+
+    con.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const res = result.map(r => {return {id: ID.randomUUID(), ...r}});
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Game Functions */
 
 const getGames = () => {
@@ -331,6 +351,7 @@ module.exports.getClubs = getClubs;
 module.exports.getClubLocations = getClubLocations;
 
 module.exports.getPlayers = getPlayers;
+module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
 
 module.exports.getGames = getGames;
 module.exports.insertGame = insertGame;
