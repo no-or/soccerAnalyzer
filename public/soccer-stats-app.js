@@ -42,12 +42,25 @@ const getLeagues = () => {
 
 /* Club Functions */
 
-const getClubs = () => {
+// Selection
+const getClubs = (req) => {
   const promise = new Promise((resolve, reject) => {
-    const query = 'SELECT club1.name AS club, manager.name AS manager, leagueName as league, club1.country, club1.location ' +
-                  'FROM club1 natural join club2 join manager ' +
-                  'WHERE club2.managerID = manager.managerID ' +
-                  'ORDER BY league ASC, club ASC';
+    const { leagueName, country } = req;
+
+    const select = 'SELECT club1.name AS club, manager.name AS manager, leagueName as league, club1.country, club1.location ';
+    const from = 'FROM club1 natural join club2 join manager '
+    const orderBy = 'ORDER BY league ASC, club ASC';
+
+    let where = 'WHERE club2.managerID = manager.managerID ';
+
+    if (typeof leagueName === 'string') {
+      where = where + `AND leagueName = '${leagueName}' `;
+    }
+    if (typeof country === 'string') {
+      where = where + `AND country = '${country}' `;
+    }
+
+    const query = select + from + where + orderBy;
 
     con.query(query, (error, result) => {
       if (error) {
