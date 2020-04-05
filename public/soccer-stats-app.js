@@ -42,13 +42,26 @@ const getLeagues = () => {
 
 /* Club Functions */
 
-const getClubs = () => {
+// Selection
+const getClubs = req => {
   const promise = new Promise((resolve, reject) => {
-    const query =
-      "SELECT club1.name AS club, manager.name AS manager, leagueName as league, club1.country, club1.location " +
-      "FROM club1 natural join club2 join manager " +
-      "WHERE club2.managerID = manager.managerID " +
-      "ORDER BY league ASC, club ASC";
+    const { leagueName, country } = req;
+
+    const select =
+      "SELECT club1.name AS club, manager.name AS manager, leagueName as league, club1.country, club1.location ";
+    const from = "FROM club1 natural join club2 join manager ";
+    const orderBy = "ORDER BY league ASC, club ASC";
+
+    let where = "WHERE club2.managerID = manager.managerID ";
+
+    if (typeof leagueName === "string") {
+      where = where + `AND leagueName = '${leagueName}' `;
+    }
+    if (typeof country === "string") {
+      where = where + `AND country = '${country}' `;
+    }
+
+    const query = select + from + where + orderBy;
 
     con.query(query, (error, result) => {
       if (error) {
@@ -74,6 +87,98 @@ const getClubLocations = () => {
           return { id: ID.randomUUID(), ...r };
         });
         resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
+// Aggregation (also nested)
+const getAvgGoalsPerPlayerPerClub = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query =
+      "SELECT clubName, leagueName, AVG(goals) AS avgGoalsPerPlayer " +
+      "FROM player " +
+      "GROUP BY clubName " +
+      "ORDER BY leagueName";
+
+    con.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const res = result.map(r => {
+          return { id: ID.randomUUID(), ...r };
+        });
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
+// Nested Aggregation
+const getNumGamesPerClub = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query =
+      "SELECT club2.name, club2.leagueName AS league, COUNT(gameID) AS gamesPlayed " +
+      "FROM club2, game2 " +
+      "WHERE c1Name = club2.name OR c2Name = club2.name " +
+      "GROUP BY club2.name " +
+      "ORDER BY club2.leagueName";
+
+    con.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const res = result.map(r => {
+          return { id: ID.randomUUID(), ...r };
+        });
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
+/* Player Functions */
+
+// Projection
+const getPlayers = req => {
+  const promise = new Promise((resolve, reject) => {
+    const { fields, clubName } = req;
+
+    const from = "FROM player ";
+    const where = `WHERE clubName = '${clubName}' `;
+    const orderBy = "ORDER BY playerID ASC";
+
+    let select = "SELECT ";
+
+    for (let i = 0; i < fields.length; i++) {
+      if (i !== fields.length - 1) {
+        select = select + fields[i] + ", ";
+      } else {
+        select = select + fields[i] + " ";
+      }
+    }
+
+    const query = select + from + where + orderBy;
+    connection.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const players = result.map(res => {
+          const { ...r } = res;
+          const player = {
+            id: r.playerID,
+            ...r
+          };
+          delete player.playerID;
+          if (player.hasOwnProperty("birthdate")) {
+            player.birthdate = new Date(player.birthdate).toUTCString();
+          }
+          return player;
+        });
+        resolve(players);
       }
     });
   });
@@ -153,6 +258,118 @@ const insertGame = data => {
   return promise;
 };
 
+// Update
+const updateGame = data => {
+  const promise = new Promise((resolve, reject) => {
+    const {
+      dateAndTime,
+      c1Name,
+      c2Name,
+      location,
+      c1Score,
+      c2Score,
+      leagueName
+    } = data;
+
+    // need to get old game2 because the old dateAndTime + c1Name + c2Name is the PK for game1
+    const findGame2 = `SELECT * FROM game2 WHERE gameID = '${req.params.gameID}'`;
+    connection.query(findGame2, (error, result) => {
+      if (error) reject(error);
+
+      const findResult = result.map(res => {
+        const { dateAndTime, c1Name, c2Name, ...r } = res;
+        const obj = {
+          dateAndTime: dateAndTime,
+          c1Name: c1Name,
+          c2Name: c2Name,
+          ...r
+        };
+        return obj;
+      });
+
+      // since javascript automatically converts dateTime objects I need to construct my own string
+      const formattedDate = convertToMySqlFormat(
+        new Date(findResult[0].dateAndTime)
+      );
+
+      const game1Set =
+        `SET dateAndTime = '${dateAndTime}', c1Name = '${c1Name}', c2Name = '${c2Name}', ` +
+        `
+                            location = '${location}', c1Score = ${c1Score}, c2Score = ${c2Score} `;
+
+      const game1Update =
+        "UPDATE game1 " +
+        game1Set +
+        `WHERE dateAndTime = '${formattedDate}' AND ` +
+        `c1Name = '${findResult[0].c1Name}' AND ` +
+        `c2Name = '${findResult[0].c2Name}'`;
+
+      const game2Set =
+        `SET dateAndTime = '${dateAndTime}', c1Name = '${c1Name}', c2Name = '${c2Name}', ` +
+        `leagueName = '${leagueName}' `;
+
+      const game2Update =
+        "UPDATE game2 " + game2Set + `WHERE gameID = '${req.params.gameID}'`;
+
+      connection.query(game1Update, (error, result) => {
+        if (error) reject(error);
+
+        connection.query(game2Update, (error, result) => {
+          if (error) reject(error);
+        });
+      });
+    });
+    resolve("Game updated");
+  });
+  return promise;
+};
+
+// Delete with cascade
+const deleteGame = gameID => {
+  const promise = new Promise((resolve, reject) => {
+    const findGame2 = `SELECT * FROM game2 WHERE gameID = '${req.params.gameID}'`;
+    const deleteGame2 = `DELETE FROM game2 WHERE gameID = '${req.params.gameID}'`;
+
+    con.query(findGame2, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const findResult = result.map(findResult => {
+          const { dateAndTime, c1Name, c2Name, ...r } = findResult;
+          const res = {
+            dateAndTime: dateAndTime,
+            c1Name: c1Name,
+            c2Name: c2Name,
+            ...r
+          };
+          return res;
+        });
+
+        // since javascript automatically converts dateTime objects I need to construct my own string
+        const formattedDate = convertToMySqlFormat(
+          new Date(findResult[0].dateAndTime)
+        );
+
+        const deleteGame1 =
+          `DELETE FROM game1 WHERE dateAndTime = '${formattedDate}' AND ` +
+          `c1Name = '${findResult[0].c1Name}' AND ` +
+          `c2Name = '${findResult[0].c2Name}'`;
+
+        // cascades to remove corresponding tuple from 'officiates' table
+        connection.query(deleteGame1, (error, result) => {
+          if (error) throw error;
+        });
+
+        connection.query(deleteGame2, (error, result) => {
+          if (error) throw error;
+        });
+      }
+    });
+    resolve("Game deleted");
+  });
+  return promise;
+};
+
 /* Referee Functions */
 
 const getReferees = () => {
@@ -179,88 +396,32 @@ const getReferees = () => {
   return promise;
 };
 
-// Del game by PK
-const delGame = gameID => {
-  if (!gameID) return { status: 400, res: "gameID is required" };
+const convertToMySqlFormat = time => {
+  const year = time.getFullYear();
+  const month =
+    time.getMonth() + 1 > 9 ? time.getMonth() + 1 : "0" + (time.getMonth() + 1);
+  const day = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
+  const hour = time.getHours() > 9 ? time.getHours() : "0" + time.getHours();
+  const minutes =
+    time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes();
+  const seconds =
+    time.getSeconds() > 9 ? time.getSeconds() : "0" + time.getSeconds();
 
-  let sql1 = `SELECT * FROM GAME2 WHERE gameID = '${gameID}'`;
-  let sql2 = `DELETE FROM GAME2 WHERE gameID = '${gameID}'`;
-
-  con.query(sql1, (err, result) => {
-    if (err) {
-      return { status: 500, res: err };
-    }
-
-    let { date, c1Name, c2Name } = result[0];
-    date = formatDate(date);
-
-    con.query(sql2, (err, result) => {
-      if (err) {
-        return { status: 500, res: err };
-      }
-
-      let sql3 = `DELETE FROM GAME1 WHERE date = '${date}' and c1Name = '${c1Name}' and c2Name = '${c2Name}'`;
-      con.query(sql3, (err, result) => {
-        if (err) {
-          return { status: 500, res: err };
-        }
-
-        return { status: 200, res: "Game removed successfully . . . ." };
-      });
-    });
-  });
-};
-
-// Send in all the attributes of both of the game tables no matter  if they are changing or not
-const updateGame = data => {
-  if (!data.gameID) return { status: 400, res: "gameID is required" };
-  const {
-    gameID,
-    date,
-    c1Name,
-    c2Name,
-    leagueName,
-    location,
-    c1Score,
-    c2Score
-  } = data;
-
-  let sql1 = `SELECT * FROM GAME2 WHERE gameID = '${gameID}'`;
-  let sql2 =
-    `UPDATE GAME2 SET date = '${date}', leagueName= '${leagueName}',` +
-    `c1Name = '${c1Name}', c2Name = '${c2Name}' WHERE gameID = '${gameID}'`;
-
-  con.query(sql1, (err, result) => {
-    if (err) {
-      return { status: 500, res: err };
-    }
-
-    let old = result[0];
-    old.date = formatDate(old.date);
-
-    con.query(sql2, (err, result) => {
-      if (err) {
-        return { status: 500, res: err };
-      }
-
-      let sql3 =
-        `UPDATE GAME1 SET date = '${date}', c1Name = '${c1Name}', c2Name = '${c2Name}', location = '${location}',` +
-        `c1Score = '${c1Score}', c2Score = '${c2Score}'  WHERE date = '${old.date}' and c1Name = '${old.c1Name}' and c2Name = '${old.c2Name}'`;
-
-      con.query(sql3, (err, result) => {
-        if (err) {
-          return { status: 500, res: err };
-        }
-
-        return { status: 200, res: "Game Updated successfully . . . ." };
-      });
-    });
-  });
+  return (
+    year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds
+  );
 };
 
 module.exports.getGames = getGames;
 module.exports.getLeagues = getLeagues;
 module.exports.getClubLocations = getClubLocations;
 module.exports.getClubs = getClubs;
-module.exports.getReferees = getReferees;
+module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
+module.exports.getNumGamesPerClub = getNumGamesPerClub;
+module.exports.getPlayers = getPlayers;
+
 module.exports.insertGame = insertGame;
+module.exports.updateGame = updateGame;
+module.exports.deleteGame = deleteGame;
+
+module.exports.getReferees = getReferees;
