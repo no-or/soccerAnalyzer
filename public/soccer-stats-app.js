@@ -92,6 +92,47 @@ const getClubLocations = () => {
   return promise;
 };
 
+// Aggregation (also nested)
+const getAvgGoalsPerPlayerPerClub = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT clubName, leagueName, AVG(goals) AS avgGoalsPerPlayer ' +
+                  'FROM player ' +
+                  'GROUP BY clubName ' +
+                  'ORDER BY leagueName';
+
+    con.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const res = result.map(r => {return {id: ID.randomUUID(), ...r}});
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
+// Nested Aggregation 
+const getNumGamesPerClub = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT club2.name, club2.leagueName AS league, COUNT(gameID) AS gamesPlayed ' +
+                  'FROM club2, game2 ' +
+                  'WHERE c1Name = club2.name OR c2Name = club2.name ' +
+                  'GROUP BY club2.name ' +
+                  'ORDER BY club2.leagueName';
+
+    con.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const res = result.map(r => {return {id: ID.randomUUID(), ...r}});
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Player Functions */
 
 // Projection
@@ -131,26 +172,6 @@ const getPlayers = (req) => {
           return player;
         });
         resolve(players); 
-      }
-    });
-  });
-  return promise;
-};
-
-// Nested Aggregation
-const getAvgGoalsPerPlayerPerClub = () => {
-  const promise = new Promise((resolve, reject) => {
-    const query = 'SELECT clubName, leagueName, AVG(goals) AS avgGoalsPerPlayer ' +
-                  'FROM player ' +
-                  'GROUP BY clubName ' +
-                  'ORDER BY leagueName';
-
-    con.query(query, (error, result) => {
-      if (error) {
-        reject(error);
-      } else {
-        const res = result.map(r => {return {id: ID.randomUUID(), ...r}});
-        resolve(res);
       }
     });
   });
@@ -349,9 +370,10 @@ module.exports.getLeagues = getLeagues;
 
 module.exports.getClubs = getClubs;
 module.exports.getClubLocations = getClubLocations;
+module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
+module.exports.getNumGamesPerClub = getNumGamesPerClub;
 
 module.exports.getPlayers = getPlayers;
-module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
 
 module.exports.getGames = getGames;
 module.exports.insertGame = insertGame;
