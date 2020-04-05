@@ -160,15 +160,8 @@ const updateGame = (data) => {
         return obj;
       });
 
-      const time = new Date(findResult[0].dateAndTime);
-      const year = time.getFullYear();
-      const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : '0' + (time.getMonth() + 1);
-      const day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
-      const hour = time.getHours() > 9 ? time.getHours() : '0' + time.getHours();
-      const minutes = time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes();
-      const seconds = time.getSeconds() > 9 ? time.getSeconds() : '0' + time.getSeconds();
       // since javascript automatically converts dateTime objects I need to construct my own string
-      const formattedDate = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
+      const formattedDate = convertToMySqlFormat(new Date(findResult[0].dateAndTime));
 
       const game1Set = `SET dateAndTime = '${dateAndTime}', c1Name = '${c1Name}', c2Name = '${c2Name}', ` + `
                             location = '${location}', c1Score = ${c1Score}, c2Score = ${c2Score} `;
@@ -216,15 +209,8 @@ const deleteGame = (gameID) => {
           return res;
         });
 
-        const time = new Date(findResult[0].dateAndTime);
-        const year = time.getFullYear();
-        const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : '0' + (time.getMonth() + 1);
-        const day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
-        const hour = time.getHours() > 9 ? time.getHours() : '0' + time.getHours();
-        const minutes = time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes();
-        const seconds = time.getSeconds() > 9 ? time.getSeconds() : '0' + time.getSeconds();
-        // since javascript automatically converts dateTime objects to some other format I need to construct my own string
-        const formattedDate = year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
+        // since javascript automatically converts dateTime objects I need to construct my own string
+        const formattedDate = convertToMySqlFormat(new Date(findResult[0].dateAndTime));
 
         const deleteGame1 = `DELETE FROM game1 WHERE dateAndTime = '${formattedDate}' AND ` + 
                                                     `c1Name = '${findResult[0].c1Name}' AND ` + 
@@ -268,6 +254,17 @@ const getReferees = () => {
     });
   });
   return promise;
+};
+
+const convertToMySqlFormat = (time) => {
+  const year = time.getFullYear();
+  const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : '0' + (time.getMonth() + 1);
+  const day = time.getDate() > 9 ? time.getDate() : '0' + time.getDate();
+  const hour = time.getHours() > 9 ? time.getHours() : '0' + time.getHours();
+  const minutes = time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes();
+  const seconds = time.getSeconds() > 9 ? time.getSeconds() : '0' + time.getSeconds();
+
+  return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
 };
 
 module.exports.getLeagues = getLeagues;
