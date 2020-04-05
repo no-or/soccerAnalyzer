@@ -4,7 +4,7 @@ const ShortUniqueId = require("short-unique-id").default;
 
 console.log("running soccer stats BE");
 //Create connection
-var con = mysql.createConnection({
+let con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "1122334455",
@@ -45,8 +45,6 @@ const getLeagues = () => {
 // Selection
 const getClubs = req => {
   const promise = new Promise((resolve, reject) => {
-    const { leagueName, country } = req;
-
     const select =
       "SELECT club1.name AS club, manager.name AS manager, leagueName as league, club1.country, club1.location ";
     const from = "FROM club1 natural join club2 join manager ";
@@ -54,11 +52,11 @@ const getClubs = req => {
 
     let where = "WHERE club2.managerID = manager.managerID ";
 
-    if (typeof leagueName === "string") {
-      where = where + `AND leagueName = '${leagueName}' `;
+    if (typeof req.leagueName === "string") {
+      where = where + `AND leagueName = '${req.leagueName}' `;
     }
-    if (typeof country === "string") {
-      where = where + `AND country = '${country}' `;
+    if (typeof req.country === "string") {
+      where = where + `AND country = '${req.country}' `;
     }
 
     const query = select + from + where + orderBy;
@@ -162,7 +160,7 @@ const getPlayers = req => {
     }
 
     const query = select + from + where + orderBy;
-    connection.query(query, (error, result) => {
+    con.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -273,7 +271,7 @@ const updateGame = data => {
 
     // need to get old game2 because the old dateAndTime + c1Name + c2Name is the PK for game1
     const findGame2 = `SELECT * FROM game2 WHERE gameID = '${req.params.gameID}'`;
-    connection.query(findGame2, (error, result) => {
+    con.query(findGame2, (error, result) => {
       if (error) reject(error);
 
       const findResult = result.map(res => {
@@ -311,10 +309,10 @@ const updateGame = data => {
       const game2Update =
         "UPDATE game2 " + game2Set + `WHERE gameID = '${req.params.gameID}'`;
 
-      connection.query(game1Update, (error, result) => {
+      con.query(game1Update, (error, result) => {
         if (error) reject(error);
 
-        connection.query(game2Update, (error, result) => {
+        con.query(game2Update, (error, result) => {
           if (error) reject(error);
         });
       });
@@ -327,8 +325,8 @@ const updateGame = data => {
 // Delete with cascade
 const deleteGame = gameID => {
   const promise = new Promise((resolve, reject) => {
-    const findGame2 = `SELECT * FROM game2 WHERE gameID = '${req.params.gameID}'`;
-    const deleteGame2 = `DELETE FROM game2 WHERE gameID = '${req.params.gameID}'`;
+    const findGame2 = `SELECT * FROM game2 WHERE gameID = '${gameID}'`;
+    const deleteGame2 = `DELETE FROM game2 WHERE gameID = '${gameID}'`;
 
     con.query(findGame2, (error, result) => {
       if (error) {
@@ -356,16 +354,29 @@ const deleteGame = gameID => {
           `c2Name = '${findResult[0].c2Name}'`;
 
         // cascades to remove corresponding tuple from 'officiates' table
-        connection.query(deleteGame1, (error, result) => {
-          if (error) throw error;
+        let promise1 = new Promise((resolve1, reject1) => {
+          con.query(deleteGame1, (error, result) => {
+            if (error) return reject1(error);
+            return resolve1("Game1 Deleted");
+          });
         });
 
-        connection.query(deleteGame2, (error, result) => {
-          if (error) throw error;
+        let promise2 = new Promise((resolve2, reject2) => {
+          con.query(deleteGame2, (error, result) => {
+            if (error) return reject2(error);
+            return resolve2("Game2 Deleted");
+          });
         });
+
+        return Promise.all([promise1, promise2])
+          .then(() => {
+            resolve("Game deleted");
+          })
+          .catch(e => {
+            reject(e);
+          });
       }
     });
-    resolve("Game deleted");
   });
   return promise;
 };

@@ -38,7 +38,7 @@ ipcMain.on("getClubLocations", event => {
 
 ipcMain.on("getClubs", event => {
   soccerStats
-    .getClubs()
+    .getClubs({})
     .then(res => {
       event.reply("getClubsReply", res);
     })
@@ -60,12 +60,25 @@ ipcMain.on("getReferees", event => {
 });
 
 ipcMain.on("insertGame", (event, args) => {
-  console.log("insert game");
-  console.log(args);
+  // console.log("insert game");
+  // console.log(args);
   soccerStats
     .insertGame(args)
     .then(res => {
       event.reply("insertGameReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+ipcMain.on("deleteGame", (event, args) => {
+  console.log("delete game");
+  console.log(args);
+  soccerStats
+    .deleteGame(args)
+    .then(res => {
+      event.reply("deleteGameReply", res);
     })
     .catch(e => {
       console.log("Error: " + e);

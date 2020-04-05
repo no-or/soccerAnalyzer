@@ -15,6 +15,8 @@ function App() {
 
   useEffect(() => {
     ipcRenderer.on("getGamesReply", (event, data) => {
+      console.log("getGamesReply: receieved updated games");
+      console.log(data);
       setGames(data);
     });
 
@@ -31,9 +33,16 @@ function App() {
     });
 
     ipcRenderer.on("getRefereesReply", (event, data) => {
-      console.log("ref reply ~~~~~~~~~~~~~~~~~~~");
-      data.forEach(d => console.log(d));
       setReferees(data);
+    });
+
+    ipcRenderer.on("insertGameReply", (event, data) => {
+      ipcRenderer.send("getGames");
+    });
+
+    ipcRenderer.on("deleteGameReply", (event, data) => {
+      console.log("deleteGameReply: got delete game reply");
+      ipcRenderer.send("getGames");
     });
 
     ipcRenderer.send("getGames");
@@ -44,7 +53,8 @@ function App() {
   }, []);
 
   const onDelete = id => {
-    ipcRenderer.send("");
+    console.log("deleting: " + id);
+    ipcRenderer.send("deleteGame", id);
   };
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -53,7 +63,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: "white" }}>
       <h3>Insert, update and delete games:</h3>
       <div style={{ padding: "8px" }}>
         <span>Insert a New Game: </span>
@@ -74,7 +84,7 @@ function App() {
           toggle();
           console.log("table button: " + id);
         }}
-        onDelete={id => console.log("table button: " + id)}
+        onDelete={id => onDelete(id)}
       />
       {/* <ResultTable results={results} />
       <ResultTable results={results} /> */}
