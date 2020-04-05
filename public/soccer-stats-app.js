@@ -82,7 +82,38 @@ const getClubLocations = () => {
   return promise;
 };
 
+/* Game Functions */
 
+// Selection + Join
+const getAllGames = async () => {
+  let promise = new Promise((resolve, reject) => {
+    const query = 'SELECT gameID, UNIX_TIMESTAMP(date) AS epoch_time, c1Name AS club1, c2Name AS club2, ' +
+                       'c1Score AS club1Score, c2Score AS club2Score, leagueName AS league, location ' +
+                  'FROM game1 natural join game2';
+
+    con.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        let res = result.map(res => {
+          let { epoch_time, ...r } = res;
+          let formattedDate = new Date(epoch_time * 1000).toUTCString();
+
+          let games = {
+            id: r.gameID,
+            date: formattedDate,
+            ...r
+          };
+          delete games.gameID;
+
+          return games;
+        });
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
 
 //Insert data into a Game table - inserts both in GAME1 AND GAME2
 //data is an object with all the required attributes
@@ -109,29 +140,6 @@ const insertGame = data => {
       return { status: 200, res: "Game inserted successfully . . . ." };
     });
   });
-};
-
-// Get All Games
-const getAllGames = async () => {
-  let promise = new Promise(function(resolve, reject) {
-    let sql = `SELECT gameID, UNIX_TIMESTAMP(date) AS epoch_time, c1Name, c2Name, leagueName FROM GAME2`;
-    con.query(sql, (err, result) => {
-      if (err) {
-        reject({ status: 500, res: err });
-      }
-      let res = result.map(res => {
-        let { epoch_time, ...r } = res;
-        let formattedDate = new Date(epoch_time * 1000).toUTCString();
-        return {
-          id: r.gameID,
-          date: formattedDate,
-          ...r
-        };
-      });
-      resolve({ status: 200, res: res });
-    });
-  });
-  return promise;
 };
 
 // Get games by leagueName
