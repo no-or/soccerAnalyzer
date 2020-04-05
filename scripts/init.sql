@@ -109,20 +109,20 @@ CREATE TABLE REFEREE
 
 CREATE TABLE GAME1
 (
-    date DATE,
+    dateAndTime TIMESTAMP,
     c1Name VARCHAR(40),
     c2Name VARCHAR(40),
     location VARCHAR(40) NOT NULL,
     c1Score INTEGER NOT NULL,
     c2Score INTEGER NOT NULL,
-    PRIMARY KEY (date, c1Name, c2Name)
+    PRIMARY KEY (dateAndTime, c1Name, c2Name)
 );
 
 
 CREATE TABLE GAME2
 (
     gameID VARCHAR(7) PRIMARY KEY,
-    date DATE,
+    dateAndTime TIMESTAMP,
     c1Name VARCHAR(40),
     c2Name VARCHAR(40),
     leagueName VARCHAR(40),
@@ -189,14 +189,9 @@ CREATE TABLE PENALTY
         ON DELETE CASCADE
 );
 
-
 COMMIT;
 
 /* -------------------- END SCHEMA -------------------- */
-
-
-
-
 
 /* -------------------- BEGIN INSERTING DATA -------------------- */
 INSERT INTO LEAGUE
@@ -476,31 +471,31 @@ VALUES
 INSERT INTO REFEREE
     (refID, name, birthdate, numCareerMatches)
 VALUES
-    ('0001', 'Mike Dean', '1968-01-02', 503),
+    ('0001', 'Mike Dean',       '1968-01-02', 503),
     ('0002', 'Martin Atkinson', '1971-03-31', 1048),
-    ('0003', 'Micheal Oliver', '1985-02-20', 939),
-    ('0004', 'Andre Marriner', '1971-01-01', 400),
-    ('0005', 'Anthony Taylor', '1978-10-20', 102);
+    ('0003', 'Micheal Oliver',  '1985-02-20', 939),
+    ('0004', 'Andre Marriner',  '1971-01-01', 400),
+    ('0005', 'Anthony Taylor',  '1978-10-20', 102);
 
 
 INSERT INTO GAME1
-    (date, c1Name, c2Name, location, c1Score, c2Score)
+    (dateAndTime, c1Name, c2Name, location, c1Score, c2Score)
 VALUES
-    ('2019-01-01', 'Liverpool FC', 'Arsenal FC', 'Anfield', 1, 0),
-    ('2019-06-01', 'Real Madrid CF', 'FC Barcelona', 'Santiago Bernabéu Stadium', 0, 3),
-    ('2019-03-03', 'Arsenal FC', 'Liverpool FC', 'Islington', 0, 2),
-    ('2019-09-04', 'FC Barcelona', 'Real Madrid CF', 'Camp Nou', 0, 1),
-    ('2019-10-06', 'Juventus FC', 'FC Inter Milan', 'Allianz Stadium', 1, 0);
+    ('2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'Anfield',                   1, 0),
+    ('2019-01-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'Santiago Bernabéu Stadium', 0, 3),
+    ('2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'Islington',                 0, 2),
+    ('2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'Camp Nou',                  0, 1),
+    ('2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Allianz Stadium',           1, 0);
 
 
 INSERT INTO GAME2
-    (gameID, date, c1Name, c2Name, leagueName)
+    (gameID, dateAndTime, c1Name, c2Name, leagueName)
 VALUES
-    ('0001', '2019-01-01', 'Liverpool FC', 'Arsenal FC', 'English Premier League'),
-    ('0002', '2019-06-01', 'Real Madrid CF', 'FC Barcelona', 'La Liga'),
-    ('0003', '2019-03-03', 'Arsenal FC', 'Liverpool FC', 'English Premier League'),
-    ('0004', '2019-09-04', 'FC Barcelona', 'Real Madrid CF', 'La Liga'),
-    ('0005', '2019-10-06', 'Juventus FC', 'FC Inter Milan', 'Serie A');
+    ('0001', '2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'English Premier League'),
+    ('0002', '2019-06-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'La Liga'),
+    ('0003', '2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'English Premier League'),
+    ('0004', '2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'La Liga'),
+    ('0005', '2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Serie A');
 
 
 INSERT INTO OFFICIATES

@@ -7,7 +7,7 @@ import ResultTable from "./components/resultTable/resultTable";
 const { ipcRenderer } = require("electron");
 
 function App() {
-  ipcRenderer.on("getAllGamesReply", (event, data) => {
+  ipcRenderer.on("getGamesReply", (event, data) => {
     // console.log("getAllGamesReply:data: " + data);
     // data.forEach(d => {
     //   console.log(d);
@@ -16,10 +16,11 @@ function App() {
   });
 
   ipcRenderer.on("getLeaguesReply", (event, data) => {
-    setLeagues(data);
+    console.log("getLeaguesReply" + data);
+    // setLeagues(data);
   });
 
-  ipcRenderer.on("getLocationsReply", (event, data) => {
+  ipcRenderer.on("getClubLocationsReply", (event, data) => {
     setLocations(data);
   });
 
@@ -33,10 +34,10 @@ function App() {
   const [clubs, setClubs] = React.useState([]);
 
   useEffect(() => {
-    ipcRenderer.send("getAllGames");
-    ipcRenderer.send("getLeagues");
-    ipcRenderer.send("getLocations");
-    ipcRenderer.send("getClubs");
+    ipcRenderer.send("getGames");
+    // ipcRenderer.send("getLeagues");
+    // ipcRenderer.send("getClubLocations");
+    // ipcRenderer.send("getClubs");
   }, []);
 
   const [isOpen, setIsOpen] = React.useState(false);
