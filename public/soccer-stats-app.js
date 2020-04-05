@@ -156,6 +156,7 @@ const insertGame = data => {
 /* Referee Functions */
 
 const getReferees = () => {
+  console.log("Callled!!!!!");
   const promise = new Promise((resolve, reject) => {
     con.query("SELECT * FROM referee", (error, result) => {
       if (error) {

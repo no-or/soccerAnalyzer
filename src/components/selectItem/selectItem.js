@@ -19,7 +19,7 @@ export default function SelectItem({
         value={selectedItem}
       >
         {items.map(item => {
-          console.log(item);
+          // console.log(item);
           return <option value={item}>{item}</option>;
         })}
       </Select>

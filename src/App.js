@@ -5,39 +5,61 @@ import Button from "@paprika/button";
 import GameModal from "./components/gameModal/gameModal";
 import ResultTable from "./components/resultTable/resultTable";
 const { ipcRenderer } = require("electron");
-
+function twoDigits(d) {
+  if (0 <= d && d < 10) return "0" + d.toString();
+  if (-10 < d && d < 0) return "-0" + (-1 * d).toString();
+  return d.toString();
+}
+Date.prototype.toMysqlFormat = function() {
+  return (
+    this.getUTCFullYear() +
+    "-" +
+    twoDigits(1 + this.getUTCMonth()) +
+    "-" +
+    twoDigits(this.getUTCDate()) +
+    " " +
+    twoDigits(this.getUTCHours()) +
+    ":" +
+    twoDigits(this.getUTCMinutes()) +
+    ":" +
+    twoDigits(this.getUTCSeconds())
+  );
+};
 function App() {
-  ipcRenderer.on("getGamesReply", (event, data) => {
-    // console.log("getAllGamesReply:data: " + data);
-    // data.forEach(d => {
-    //   console.log(d);
-    // });
-    setGames(data);
-  });
-
-  ipcRenderer.on("getLeaguesReply", (event, data) => {
-    console.log("getLeaguesReply" + data);
-    // setLeagues(data);
-  });
-
-  ipcRenderer.on("getClubLocationsReply", (event, data) => {
-    setLocations(data);
-  });
-
-  ipcRenderer.on("getClubsReply", (event, data) => {
-    setClubs(data);
-  });
-
   const [games, setGames] = React.useState([]);
   const [leagues, setLeagues] = React.useState([]);
   const [locations, setLocations] = React.useState([]);
   const [clubs, setClubs] = React.useState([]);
+  const [referees, setReferees] = React.useState([]);
 
   useEffect(() => {
+    ipcRenderer.on("getGamesReply", (event, data) => {
+      setGames(data);
+    });
+
+    ipcRenderer.on("getLeaguesReply", (event, data) => {
+      setLeagues(data);
+    });
+
+    ipcRenderer.on("getClubLocationsReply", (event, data) => {
+      setLocations(data);
+    });
+
+    ipcRenderer.on("getClubsReply", (event, data) => {
+      setClubs(data);
+    });
+
+    ipcRenderer.on("getRefereesReply", (event, data) => {
+      console.log("ref reply ~~~~~~~~~~~~~~~~~~~");
+      data.forEach(d => console.log(d));
+      setReferees(data);
+    });
+
     ipcRenderer.send("getGames");
-    // ipcRenderer.send("getLeagues");
-    // ipcRenderer.send("getClubLocations");
-    // ipcRenderer.send("getClubs");
+    ipcRenderer.send("getLeagues");
+    ipcRenderer.send("getClubLocations");
+    ipcRenderer.send("getClubs");
+    ipcRenderer.send("getReferees");
   }, []);
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -52,7 +74,15 @@ function App() {
         <span>Insert a New Game: </span>
         <Button onClick={toggle}>Insert Game</Button>
       </div>
-      <GameModal games={games} isOpen={isOpen} handleClose={toggle} />
+      <GameModal
+        games={games}
+        leagues={leagues}
+        clubs={clubs}
+        locations={locations}
+        referees={referees}
+        isOpen={isOpen}
+        handleClose={toggle}
+      />
       <ResultTable
         results={games}
         onUpdate={id => {
