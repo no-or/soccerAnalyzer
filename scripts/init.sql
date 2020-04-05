@@ -482,7 +482,7 @@ INSERT INTO GAME1
     (dateAndTime, c1Name, c2Name, location, c1Score, c2Score)
 VALUES
     ('2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'Anfield',                   1, 0),
-    ('2019-01-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'Santiago Bernabéu Stadium', 0, 3),
+    ('2019-06-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'Santiago Bernabéu Stadium', 0, 3),
     ('2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'Islington',                 0, 2),
     ('2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'Camp Nou',                  0, 1),
     ('2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Allianz Stadium',           1, 0);
@@ -491,21 +491,21 @@ VALUES
 INSERT INTO GAME2
     (gameID, dateAndTime, c1Name, c2Name, leagueName)
 VALUES
-    ('0001', '2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'English Premier League'),
-    ('0002', '2019-06-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'La Liga'),
-    ('0003', '2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'English Premier League'),
-    ('0004', '2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'La Liga'),
-    ('0005', '2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Serie A');
+    ('000001', '2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'English Premier League'),
+    ('000002', '2019-06-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'La Liga'),
+    ('000003', '2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'English Premier League'),
+    ('000004', '2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'La Liga'),
+    ('000005', '2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Serie A');
 
 
 INSERT INTO OFFICIATES
     (refID, gameID)
 VALUES
-    ('0001', '0001'),
-    ('0003', '0002'),
-    ('0005', '0004'),
-    ('0002', '0003'),
-    ('0004', '0005');
+    ('0001', '000001'),
+    ('0003', '000002'),
+    ('0005', '000004'),
+    ('0002', '000003'),
+    ('0004', '000005');
 
 
 INSERT INTO INJURY
@@ -521,11 +521,11 @@ VALUES
 INSERT INTO PENALTY
     (playerID, gameID, refID, timeInGame, cardColor)
 VALUES
-    ('0108', '0001', '0001', 5300, 'yellow'),
-    ('1402', '0002', '0003', 2500, 'yellow'),
-    ('0403', '0003', '0002', 1000, 'yellow'),
-    ('1302', '0004', '0005', 3630, 'yellow'),
-    ('0902', '0005', '0004', 2000, 'red');
+    ('0108', '000001', '0001', 5300, 'yellow'),
+    ('1402', '000002', '0003', 2500, 'yellow'),
+    ('0403', '000003', '0002', 1000, 'yellow'),
+    ('1302', '000004', '0005', 3630, 'yellow'),
+    ('0902', '000005', '0004', 2000, 'red');
 
 
 COMMIT;
