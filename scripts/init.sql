@@ -3,7 +3,7 @@ USE db;
 
 /* -------------------- BEGIN SCHEMA -------------------- */
 
-CREATE TABLE LEAGUE
+CREATE TABLE league
 (
     name VARCHAR(40),
     country VARCHAR(40),
@@ -12,7 +12,7 @@ CREATE TABLE LEAGUE
 );
 
 
-CREATE TABLE MANAGER
+CREATE TABLE manager
 (
     managerID VARCHAR(7) PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE MANAGER
 );
 
 
-CREATE TABLE CLUB1
+CREATE TABLE club1
 (
     name VARCHAR(40),
     country VARCHAR(40),
@@ -31,7 +31,7 @@ CREATE TABLE CLUB1
 );
 
 
-CREATE TABLE CLUB2
+CREATE TABLE club2
 (
     name VARCHAR(40),
     managerID VARCHAR(7),
@@ -50,7 +50,7 @@ CREATE TABLE CLUB2
 );
 
 
-CREATE TABLE PLAYER
+CREATE TABLE player
 (
     playerID VARCHAR(7) PRIMARY KEY,
     clubName VARCHAR(40),
@@ -72,7 +72,7 @@ CREATE TABLE PLAYER
 );
 
 
-CREATE TABLE FIELD_PLAYER
+CREATE TABLE fieldPlayer
 (
     playerID VARCHAR(7) PRIMARY KEY,
     penaltyShotsTaken INTEGER,
@@ -84,7 +84,7 @@ CREATE TABLE FIELD_PLAYER
 );
 
 
-CREATE TABLE GOALKEEPER
+CREATE TABLE goalkeeper
 (
     playerID VARCHAR(7) PRIMARY KEY,
     cleansheets INTEGER,
@@ -98,7 +98,7 @@ CREATE TABLE GOALKEEPER
 );
 
 
-CREATE TABLE REFEREE
+CREATE TABLE referee
 (
     refID VARCHAR(7) PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE REFEREE
 );
 
 
-CREATE TABLE GAME1
+CREATE TABLE game1
 (
     dateAndTime TIMESTAMP,
     c1Name VARCHAR(40),
@@ -119,7 +119,7 @@ CREATE TABLE GAME1
 );
 
 
-CREATE TABLE GAME2
+CREATE TABLE game2
 (
     gameID VARCHAR(7) PRIMARY KEY,
     dateAndTime TIMESTAMP,
@@ -137,7 +137,7 @@ CREATE TABLE GAME2
 );
 
 
-CREATE TABLE OFFICIATES
+CREATE TABLE officiates
 (
     refID VARCHAR(7),
     gameID VARCHAR(7),
@@ -153,7 +153,7 @@ CREATE TABLE OFFICIATES
 );
 
 
-CREATE TABLE INJURY
+CREATE TABLE injury
 (
     playerID VARCHAR(7),
     dateAndTime DATE,
@@ -167,7 +167,7 @@ CREATE TABLE INJURY
 );
 
 
-CREATE TABLE PENALTY
+CREATE TABLE penalty
 (
     playerID VARCHAR(7),
     gameID VARCHAR(7),
@@ -194,7 +194,7 @@ COMMIT;
 /* -------------------- END SCHEMA -------------------- */
 
 /* -------------------- BEGIN INSERTING DATA -------------------- */
-INSERT INTO LEAGUE
+INSERT INTO league
     (name, country, yearFounded)
 VALUES
     ('English Premier League', 'England', 1992),
@@ -204,7 +204,7 @@ VALUES
     ('Ligue 1',                'France',  1930);
 
 
-INSERT INTO MANAGER
+INSERT INTO manager
     (managerID, name, numCareerWins, numCareerLoses, numCareerDraws)
 VALUES
     ('0001', 'Mikel Arteta',         8,   2,   5),
@@ -223,7 +223,7 @@ VALUES
     ('0014', 'Zinedine Zidane',      149, 38 , 52);
     
 
-INSERT INTO CLUB1
+INSERT INTO club1
     (name, country, location)
 VALUES
     ('Arsenal FC',                'England', 'Islington'),
@@ -242,7 +242,7 @@ VALUES
     ('Real Madrid CF',            'Spain',   'Santiago Bernabéu Stadium');
 
 
-INSERT INTO CLUB2
+INSERT INTO club2
     (name, managerID, leagueName, country)
 VALUES
     ('Arsenal FC',                '0001', 'English Premier League', 'England'),
@@ -261,7 +261,7 @@ VALUES
     ('Real Madrid CF',            '0014', 'La Liga',                'Spain');
 
 
-INSERT INTO PLAYER
+INSERT INTO player
     (playerID, name, leagueName, clubName, number, birthdate, heightCM, weightKG, goals, assists, numRedCards, numYellowCards)
 VALUES
     /* Arsenal FC starting 11 */
@@ -362,7 +362,7 @@ VALUES
     ('1402', 'Eden Hazard',      'La Liga', 'Real Madrid CF', 7,  '1991-01-07', 175, 74, 161, 150, 1, 29);
 
 
-INSERT INTO FIELD_PLAYER
+INSERT INTO fieldPlayer
     (playerID, penaltyShotsTaken, penaltyShotsScored)
 VALUES
     /* Arsenal */
@@ -449,7 +449,7 @@ VALUES
     ('1402', 48, 7);
     
 
-INSERT INTO GOALKEEPER
+INSERT INTO goalkeeper
     (playerID, cleansheets, goalsConceded, penaltyShotsSaved, penaltyShotsConceded)
 VALUES
     ('0101', 146, 560, 14, 59),
@@ -468,7 +468,7 @@ VALUES
     ('1401', 173, 400, 7,  36);
 
 
-INSERT INTO REFEREE
+INSERT INTO referee
     (refID, name, birthdate, numCareerMatches)
 VALUES
     ('0001', 'Mike Dean',       '1968-01-02', 503),
@@ -478,7 +478,7 @@ VALUES
     ('0005', 'Anthony Taylor',  '1978-10-20', 102);
 
 
-INSERT INTO GAME1
+INSERT INTO game1
     (dateAndTime, c1Name, c2Name, location, c1Score, c2Score)
 VALUES
     ('2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'Anfield',                   1, 0),
@@ -488,7 +488,7 @@ VALUES
     ('2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Allianz Stadium',           1, 0);
 
 
-INSERT INTO GAME2
+INSERT INTO game2
     (gameID, dateAndTime, c1Name, c2Name, leagueName)
 VALUES
     ('000001', '2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'English Premier League'),
@@ -498,7 +498,7 @@ VALUES
     ('000005', '2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Serie A');
 
 
-INSERT INTO OFFICIATES
+INSERT INTO officiates
     (refID, gameID)
 VALUES
     ('0001', '000001'),
@@ -508,7 +508,7 @@ VALUES
     ('0004', '000005');
 
 
-INSERT INTO INJURY
+INSERT INTO injury
     (playerID, dateAndTime, duration, type)
 VALUES
     ('0102', '2019-01-02', 2628000, 'Knee'),
@@ -518,7 +518,7 @@ VALUES
     ('0607', '2019-07-10', 3200000, 'Back');
 
 
-INSERT INTO PENALTY
+INSERT INTO penalty
     (playerID, gameID, refID, timeInGame, cardColor)
 VALUES
     ('0108', '000001', '0001', 5300, 'yellow'),
