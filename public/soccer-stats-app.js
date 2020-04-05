@@ -92,6 +92,51 @@ const getClubLocations = () => {
   return promise;
 };
 
+/* Player Functions */
+
+// Projection
+const getPlayers = (req) => {
+  const promise = new Promise((resolve, reject) => {
+    const { fields, clubName } = req;
+
+    const from = 'FROM player ';
+    const where = `WHERE clubName = '${clubName}' `;
+    const orderBy = 'ORDER BY playerID ASC';
+
+    let select = 'SELECT ';
+
+    for (let i = 0; i < fields.length; i++) {
+      if (i !== fields.length - 1) {
+        select = select + fields[i] + ', ';
+      } else {
+        select = select + fields[i] + ' ';
+      }
+    }
+
+    const query = select + from + where + orderBy;
+    connection.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const players = result.map(res => {
+          const { ...r } = res;
+          const player = {
+            id: r.playerID,
+            ...r
+          };
+          delete player.playerID;
+          if (player.hasOwnProperty('birthdate')) {
+            player.birthdate = new Date(player.birthdate).toUTCString();
+          }
+          return player;
+        });
+        resolve(players); 
+      }
+    });
+  });
+  return promise;
+};
+
 /* Game Functions */
 
 const getGames = () => {
@@ -284,6 +329,8 @@ module.exports.getLeagues = getLeagues;
 
 module.exports.getClubs = getClubs;
 module.exports.getClubLocations = getClubLocations;
+
+module.exports.getPlayers = getPlayers;
 
 module.exports.getGames = getGames;
 module.exports.insertGame = insertGame;
