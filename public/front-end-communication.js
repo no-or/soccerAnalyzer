@@ -3,8 +3,19 @@ const soccerStats = require("./soccer-stats-app.js");
 
 console.log("front end comm loaded");
 
+ipcMain.on("getLeagues", event => {
+  soccerStats
+    .getLeagues()
+    .then(res => {
+      console.log(res);
+      event.reply("getLeaguesReply", res.res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
 ipcMain.on("getAllGames", event => {
-  // console.log(arg); // prints "ping"
   soccerStats
     .getAllGames()
     .then(res => {

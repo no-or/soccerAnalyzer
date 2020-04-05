@@ -6,7 +6,7 @@ import Modal from "@paprika/modal";
 import Button from "@paprika/button";
 import "./gameModal.css";
 
-export default function GameModal({ isOpen, handleClose }) {
+export default function GameModal({ isOpen, handleClose, games }) {
   const [league, setLeague] = React.useState("");
   let leagues = [
     "English Premier League",

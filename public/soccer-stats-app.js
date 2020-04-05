@@ -66,15 +66,18 @@ const insertGame = data => {
 
 // Get leagues
 const getLeagues = () => {
-  let sql = "SELECT * from LEAGUE";
+  let promise = new Promise(function(resolve, reject) {
+    let sql = "SELECT name from LEAGUE";
 
-  connection.query(sql, (err, result) => {
-    if (err) {
-      return { status: 500, res: err };
-    }
+    connection.query(sql, (err, result) => {
+      if (err) {
+        reject({ status: 500, res: err });
+      }
 
-    return { status: 200, res: result };
+      resolve({ status: 200, res: result });
+    });
   });
+  return promise;
 };
 
 // Get Club By LeagueName
@@ -104,7 +107,7 @@ const getLocByClubName = clubName => {
 };
 
 // Get All Games
-const getAllGames = async () => {
+const getAllGames = () => {
   let promise = new Promise(function(resolve, reject) {
     let sql = `SELECT gameID, UNIX_TIMESTAMP(date) AS epoch_time, c1Name, c2Name, leagueName FROM GAME2`;
     connection.query(sql, (err, result) => {
@@ -236,4 +239,5 @@ const formatDate = currentDate => {
   return currentDate.toISODate();
 };
 
+module.exports.getLeagues = getLeagues;
 module.exports.getAllGames = getAllGames;
