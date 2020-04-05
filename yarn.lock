@@ -1279,6 +1279,19 @@
     "@paprika/tokens" "^0.1.13"
     prop-types "^15.7.2"
 
+"@paprika/checkbox@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@paprika/checkbox/-/checkbox-0.2.9.tgz#158bd62d21841e967633858cdb0509174af8fa42"
+  integrity sha512-fr6w7qnEntcbVAIAhSXuFZ7wqt/4jGtRs5PbCv6i+qkE4Q1x6rNp2ojQTlmzsp6sDsaf21cbza+eN2vzOwVBfw==
+  dependencies:
+    "@babel/runtime-corejs2" "^7.3.1"
+    "@paprika/helpers" "^0.2.10"
+    "@paprika/icon" "^0.2.15"
+    "@paprika/stylers" "^0.2.6"
+    "@paprika/tokens" "^0.1.13"
+    prop-types "^15.7.2"
+    uuid "^3.3.2"
+
 "@paprika/confirmation@^0.3.14":
   version "0.3.14"
   resolved "https://registry.yarnpkg.com/@paprika/confirmation/-/confirmation-0.3.14.tgz#f9839ce106cffa06a02f37a71f4ebed1d448e89d"

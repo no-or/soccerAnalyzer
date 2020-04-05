@@ -37,7 +37,7 @@ export default function SelectionQuery({ leagues }) {
 
   return (
     <div>
-      <h3>Select teams by country and league:</h3>
+      <h3>Select clubs by country and league:</h3>
       <h4>Choose filter conditions:</h4>
       <SelectItem
         category="Country"

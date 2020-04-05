@@ -47,18 +47,6 @@ ipcMain.on("getClubs", event => {
     });
 });
 
-ipcMain.on("getSelectClubs", (event, args) => {
-  console.log("get selcet: " + args);
-  soccerStats
-    .getClubs(args)
-    .then(res => {
-      event.reply("getSelectClubsReply", res);
-    })
-    .catch(e => {
-      console.log("Error: " + e);
-    });
-});
-
 ipcMain.on("getReferees", event => {
   soccerStats
     .getReferees()
@@ -104,6 +92,33 @@ ipcMain.on("updateGame", (event, args) => {
     .updateGame(args)
     .then(res => {
       event.reply("updateGameReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+// selection
+ipcMain.on("getSelectClubs", (event, args) => {
+  console.log("get selcet: " + args);
+  soccerStats
+    .getClubs(args)
+    .then(res => {
+      event.reply("getSelectClubsReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+// projection
+ipcMain.on("getProjectPlayers", (event, args) => {
+  console.log("get project: " + args);
+  soccerStats
+    .getPlayers(args)
+    .then(res => {
+      console.log("ress: " + res);
+      event.reply("getProjectPlayersReply", res);
     })
     .catch(e => {
       console.log("Error: " + e);

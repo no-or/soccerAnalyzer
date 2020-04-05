@@ -5,6 +5,7 @@ import Button from "@paprika/button";
 import GameModal from "./components/gameModal/gameModal";
 import ResultTable from "./components/resultTable/resultTable";
 import SelectionQuery from "./components/selectionQuery/selectionQuery";
+import ProjectionQuery from "./components/projectionQuery/projectionQuery";
 const { ipcRenderer } = require("electron");
 
 function App() {
@@ -105,6 +106,7 @@ function App() {
         onDelete={id => onDelete(id)}
       />
       <SelectionQuery leagues={leagues} />
+      <ProjectionQuery clubs={clubs} />
       {/* <ResultTable results={results} />
       <ResultTable results={results} /> */}
     </div>
