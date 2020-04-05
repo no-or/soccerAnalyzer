@@ -40,11 +40,11 @@ CREATE TABLE club2
     UNIQUE(managerID),
     PRIMARY KEY (name, leagueName),
     FOREIGN KEY (leagueName, country)
-        REFERENCES LEAGUE (name, country)
+        REFERENCES league (name, country)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (managerID)
-        REFERENCES MANAGER (managerID)
+        REFERENCES manager (managerID)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
@@ -66,7 +66,7 @@ CREATE TABLE player
     numYellowCards INTEGER,
     UNIQUE(clubName, leagueName, number),
     FOREIGN KEY (clubName, leagueName)
-        REFERENCES CLUB2 (name, leagueName)
+        REFERENCES club2 (name, leagueName)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
@@ -78,7 +78,7 @@ CREATE TABLE fieldPlayer
     penaltyShotsTaken INTEGER,
     penaltyShotsScored INTEGER,
     FOREIGN KEY (playerID)
-        REFERENCES PLAYER (playerID)
+        REFERENCES player (playerID)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -92,7 +92,7 @@ CREATE TABLE goalkeeper
     penaltyShotsSaved INTEGER,
     penaltyShotsConceded INTEGER,
     FOREIGN KEY (playerID)
-        REFERENCES PLAYER (playerID)
+        REFERENCES player (playerID)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -127,11 +127,11 @@ CREATE TABLE game2
     c2Name VARCHAR(40),
     leagueName VARCHAR(40),
     FOREIGN KEY (c1Name, leagueName)
-        REFERENCES CLUB2 (name, leagueName)
+        REFERENCES club2 (name, leagueName)
         ON UPDATE CASCADE
         ON DELETE SET NULL,
     FOREIGN KEY (c2Name, leagueName)
-        REFERENCES CLUB2 (name, leagueName)
+        REFERENCES club2 (name, leagueName)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
@@ -143,11 +143,11 @@ CREATE TABLE officiates
     gameID VARCHAR(7),
     PRIMARY KEY (refID, gameID),
     FOREIGN KEY (refID)
-        REFERENCES REFEREE (refID)
+        REFERENCES referee (refID)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (gameID)
-        REFERENCES GAME2 (gameID)
+        REFERENCES game2 (gameID)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -161,7 +161,7 @@ CREATE TABLE injury
     type VARCHAR(40) NOT NULL,
     PRIMARY KEY (playerID, dateAndTime),
     FOREIGN KEY (playerID)
-        REFERENCES PLAYER (playerID)
+        REFERENCES player (playerID)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -176,15 +176,15 @@ CREATE TABLE penalty
     cardColor VARCHAR(7) NOT NULL,
     PRIMARY KEY (playerID, gameID, refID),
     FOREIGN KEY (playerID)
-        REFERENCES PLAYER (playerID)
+        REFERENCES player (playerID)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (refID)
-        REFERENCES REFEREE (refID)
+        REFERENCES referee (refID)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (gameID)
-        REFERENCES GAME2 (gameID)
+        REFERENCES game2 (gameID)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
