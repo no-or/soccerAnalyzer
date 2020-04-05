@@ -1,14 +1,15 @@
 const mysql = require("mysql");
 const ShortUniqueId = require("short-unique-id").default;
+// const frontEndComm = require("./front-end-communication.js");
 
 console.log("running soccer stats BE");
-
 //Create connection
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "1122334455",
-  database: "db",
+  database: "db"
+  // port: 3308
 });
 
 con.connect((err) => {
@@ -18,7 +19,7 @@ con.connect((err) => {
   console.log("MySql connected . . .");
 });
 
-//Instantiate id generator
+// Instantiate id generator
 const ID = new ShortUniqueId();
 
 /* League Functions */
@@ -83,13 +84,9 @@ const getClubLocations = () => {
 
 
 
-
-
-
-
 //Insert data into a Game table - inserts both in GAME1 AND GAME2
 //data is an object with all the required attributes
-const insertGame = (data) => {
+const insertGame = data => {
   if (!data.location) throw new Error("location can not be null");
 
   const { leagueName, c1Name, date, c2Name, location, c1Score, c2Score } = data;
@@ -115,20 +112,30 @@ const insertGame = (data) => {
 };
 
 // Get All Games
-const getAllGames = () => {
-  let sql = `SELECT * FROM GAME2`;
-
-  con.query(sql, (err, result) => {
-    if (err) {
-      return { status: 500, res: err };
-    }
-
-    return { status: 200, res: result };
+const getAllGames = async () => {
+  let promise = new Promise(function(resolve, reject) {
+    let sql = `SELECT gameID, UNIX_TIMESTAMP(date) AS epoch_time, c1Name, c2Name, leagueName FROM GAME2`;
+    con.query(sql, (err, result) => {
+      if (err) {
+        reject({ status: 500, res: err });
+      }
+      let res = result.map(res => {
+        let { epoch_time, ...r } = res;
+        let formattedDate = new Date(epoch_time * 1000).toUTCString();
+        return {
+          id: r.gameID,
+          date: formattedDate,
+          ...r
+        };
+      });
+      resolve({ status: 200, res: res });
+    });
   });
+  return promise;
 };
 
 // Get games by leagueName
-const getGamesByLeague = (leagueName) => {
+const getGamesByLeague = leagueName => {
   let sql = `SELECT * FROM GAME2 WHERE leagueName = '${leagueName}' `;
 
   con.query(sql, (err, result) => {
@@ -141,7 +148,7 @@ const getGamesByLeague = (leagueName) => {
 };
 
 // Del game by PK
-const delGame = (gameID) => {
+const delGame = gameID => {
   if (!gameID) return { status: 400, res: "gameID is required" };
 
   let sql1 = `SELECT * FROM GAME2 WHERE gameID = '${gameID}'`;
@@ -173,7 +180,7 @@ const delGame = (gameID) => {
 };
 
 // Send in all the attributes of both of the game tables no matter  if they are changing or not
-const updateGame = (data) => {
+const updateGame = data => {
   if (!data.gameID) return { status: 400, res: "gameID is required" };
   const {
     gameID,
@@ -183,7 +190,7 @@ const updateGame = (data) => {
     leagueName,
     location,
     c1Score,
-    c2Score,
+    c2Score
   } = data;
 
   let sql1 = `SELECT * FROM GAME2 WHERE gameID = '${gameID}'`;
@@ -220,10 +227,10 @@ const updateGame = (data) => {
 };
 
 // util func to format date
-const formatDate = (currentDate) => {
+const formatDate = currentDate => {
   if (!Date.prototype.toISODate) {
     // eslint-disable-next-line no-extend-native
-    Date.prototype.toISODate = function () {
+    Date.prototype.toISODate = function() {
       return (
         this.getFullYear() +
         "-" +
@@ -236,3 +243,5 @@ const formatDate = (currentDate) => {
 
   return currentDate.toISODate();
 };
+
+module.exports.getAllGames = getAllGames;
