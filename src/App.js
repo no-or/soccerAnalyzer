@@ -8,6 +8,7 @@ const { ipcRenderer } = require("electron");
 
 function App() {
   const [games, setGames] = React.useState([]);
+  const [game, setGame] = React.useState(null);
   const [leagues, setLeagues] = React.useState([]);
   const [locations, setLocations] = React.useState([]);
   const [clubs, setClubs] = React.useState([]);
@@ -37,11 +38,17 @@ function App() {
     });
 
     ipcRenderer.on("insertGameReply", (event, data) => {
+      setGame(null);
       ipcRenderer.send("getGames");
     });
 
     ipcRenderer.on("deleteGameReply", (event, data) => {
-      console.log("deleteGameReply: got delete game reply");
+      // console.log("deleteGameReply: got delete game reply");
+      ipcRenderer.send("getGames");
+    });
+
+    ipcRenderer.on("updateGameReply", (event, data) => {
+      setGame(null);
       ipcRenderer.send("getGames");
     });
 
@@ -52,9 +59,22 @@ function App() {
     ipcRenderer.send("getReferees");
   }, []);
 
+  const openForInsert = () => {
+    setGame(null);
+    toggle();
+  };
   const onDelete = id => {
-    console.log("deleting: " + id);
+    // console.log("deleting: " + id);
     ipcRenderer.send("deleteGame", id);
+  };
+
+  const onUpdate = id => {
+    // console.log("deleting: " + id);
+    console.log("games");
+    games.forEach(g => console.log(g));
+    let g = games.filter(m => m.id === id);
+    setGame(g[0]);
+    toggle();
   };
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -67,10 +87,10 @@ function App() {
       <h3>Insert, update and delete games:</h3>
       <div style={{ padding: "8px" }}>
         <span>Insert a New Game: </span>
-        <Button onClick={toggle}>Insert Game</Button>
+        <Button onClick={() => openForInsert()}>Insert Game</Button>
       </div>
       <GameModal
-        games={games}
+        game={game}
         leagues={leagues}
         clubs={clubs}
         locations={locations}
@@ -80,10 +100,7 @@ function App() {
       />
       <ResultTable
         results={games}
-        onUpdate={id => {
-          toggle();
-          console.log("table button: " + id);
-        }}
+        onUpdate={id => onUpdate(id)}
         onDelete={id => onDelete(id)}
       />
       {/* <ResultTable results={results} />

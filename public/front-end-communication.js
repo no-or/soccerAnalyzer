@@ -84,3 +84,16 @@ ipcMain.on("deleteGame", (event, args) => {
       console.log("Error: " + e);
     });
 });
+
+ipcMain.on("updateGame", (event, args) => {
+  console.log("update game");
+  console.log(args);
+  soccerStats
+    .updateGame(args)
+    .then(res => {
+      event.reply("updateGameReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});

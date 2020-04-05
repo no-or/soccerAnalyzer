@@ -31,7 +31,7 @@ Date.prototype.toMysqlFormat = function() {
 export default function GameModal({
   isOpen,
   handleClose,
-  games,
+  game,
   leagues,
   clubs,
   referees,
@@ -46,10 +46,54 @@ export default function GameModal({
   const [club1, setClub1] = React.useState("");
   const [club2, setClub2] = React.useState("");
   const [location, setLocation] = React.useState("");
-  const [referee, setReferee] = React.useState(null);
-  const [club1Score, setClub1Score] = React.useState(null);
-  const [club2Score, setClub2Score] = React.useState(null);
+  const [referee, setReferee] = React.useState("");
+  const [club1Score, setClub1Score] = React.useState("");
+  const [club2Score, setClub2Score] = React.useState("");
+  const [sendDisabled, setSendDisabled] = React.useState(true);
   const [date, setDate] = React.useState(null);
+
+  React.useEffect(() => {
+    if (
+      league === "" ||
+      club1 === "" ||
+      club2 === "" ||
+      location === "" ||
+      referee === "" ||
+      club1Score === "" ||
+      club2Score === "" ||
+      date === null ||
+      club1 === club2
+    ) {
+      setSendDisabled(true);
+    } else {
+      setSendDisabled(false);
+    }
+  }, [league, club1, club2, location, referee, club1Score, club2Score, date]);
+
+  React.useEffect(() => {
+    if (game !== null) {
+      console.log("GAME!!!!!");
+      console.log(game);
+      setLeague(game.league);
+      setClub1(game.club1);
+      setClub2(game.club2);
+      setLocation(game.location);
+      setReferee(game.refereeName);
+      setClub1Score(game.club1Score);
+      setClub2Score(game.club2Score);
+      setDate(game.dateAndTime);
+    } else {
+      console.log("reseting game modal!!");
+      setLeague("");
+      setClub1("");
+      setClub2("");
+      setLocation("");
+      setReferee("");
+      setClub1Score("");
+      setClub2Score("");
+      setDate(null);
+    }
+  }, [game]);
 
   React.useEffect(() => {
     setLeagueNames(leagues.map(league => league.name));
@@ -97,7 +141,23 @@ export default function GameModal({
       leagueName: league,
       refID: ref[0].id
     });
-    ipcRenderer.send("getGames");
+    handleClose();
+  };
+
+  const updateGame = () => {
+    let ref = referees.filter(ref => ref.name === referee);
+    let mysqlDate = new Date(date).toMysqlFormat();
+    ipcRenderer.send("updateGame", {
+      dateAndTime: mysqlDate,
+      c1Name: club1,
+      c2Name: club2,
+      location,
+      c1Score: club1Score,
+      c2Score: club2Score,
+      leagueName: league,
+      refID: ref[0].id,
+      gameID: game.id
+    });
     handleClose();
   };
 
@@ -105,7 +165,9 @@ export default function GameModal({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
-      <Modal.Header hasCloseButton={true}>Insert Game</Modal.Header>
+      <Modal.Header hasCloseButton={true}>
+        {game ? "Update Game" : "Insert Game"}
+      </Modal.Header>
       <Modal.Content>
         <div className="App">
           <div className="selection-container">
@@ -179,9 +241,23 @@ export default function GameModal({
         </div>
       </Modal.Content>
       <Modal.Footer>
-        <Button kind="primary" onClick={() => insertGame()}>
-          Insert
-        </Button>
+        {game ? (
+          <Button
+            kind="primary"
+            isDisabled={sendDisabled}
+            onClick={() => updateGame()}
+          >
+            Update
+          </Button>
+        ) : (
+          <Button
+            kind="primary"
+            isDisabled={sendDisabled}
+            onClick={() => insertGame()}
+          >
+            Insert
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );

@@ -266,11 +266,12 @@ const updateGame = data => {
       location,
       c1Score,
       c2Score,
-      leagueName
+      leagueName,
+      gameID
     } = data;
 
     // need to get old game2 because the old dateAndTime + c1Name + c2Name is the PK for game1
-    const findGame2 = `SELECT * FROM game2 WHERE gameID = '${req.params.gameID}'`;
+    const findGame2 = `SELECT * FROM game2 WHERE gameID = '${gameID}'`;
     con.query(findGame2, (error, result) => {
       if (error) reject(error);
 
@@ -307,17 +308,18 @@ const updateGame = data => {
         `leagueName = '${leagueName}' `;
 
       const game2Update =
-        "UPDATE game2 " + game2Set + `WHERE gameID = '${req.params.gameID}'`;
+        "UPDATE game2 " + game2Set + `WHERE gameID = '${gameID}'`;
 
       con.query(game1Update, (error, result) => {
         if (error) reject(error);
 
         con.query(game2Update, (error, result) => {
           if (error) reject(error);
+          resolve("Game updated");
         });
       });
     });
-    resolve("Game updated");
+    // resolve("Game updated");
   });
   return promise;
 };
