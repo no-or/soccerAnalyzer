@@ -82,31 +82,53 @@ const getClubLocations = () => {
   return promise;
 };
 
+/* Referee Functions */
+
+// Selection
+const getReferees = () => {
+  let promise = new Promise((resolve, reject) => {
+    con.query('SELECT * FROM referee', (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        let res = result.map(res => {
+          let { birthdate, ...r } = res;
+          let ref = {
+            id: r.refID,
+            birthdate: new Date(birthdate).toUTCString(),
+            ...r
+          };
+          delete ref.refID;
+          return ref;
+        });
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Game Functions */
 
 // Selection + Join
-const getAllGames = async () => {
+const getGames = () => {
   let promise = new Promise((resolve, reject) => {
-    const query = 'SELECT gameID, UNIX_TIMESTAMP(date) AS epoch_time, c1Name AS club1, c2Name AS club2, ' +
-                       'c1Score AS club1Score, c2Score AS club2Score, leagueName AS league, location ' +
+    const query = 'SELECT gameID, dateAndTime, c1Name AS club1, c2Name AS club2, c1Score AS club1Score, ' + 
+                         'c2Score AS club2Score, leagueName AS league, location ' +
                   'FROM game1 natural join game2';
 
     con.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
-        let res = result.map(res => {
-          let { epoch_time, ...r } = res;
-          let formattedDate = new Date(epoch_time * 1000).toUTCString();
-
-          let games = {
+        let res = result.map(r => {
+          let game = {
             id: r.gameID,
-            date: formattedDate,
+            date: r.dateAndTime.toUTCString(),
             ...r
           };
-          delete games.gameID;
-
-          return games;
+          delete game.gameID;
+          return game;
         });
         resolve(res);
       }
