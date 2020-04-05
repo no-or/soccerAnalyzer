@@ -47,6 +47,18 @@ ipcMain.on("getClubs", event => {
     });
 });
 
+ipcMain.on("getSelectClubs", (event, args) => {
+  console.log("get selcet: " + args);
+  soccerStats
+    .getClubs(args)
+    .then(res => {
+      event.reply("getSelectClubsReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
 ipcMain.on("getReferees", event => {
   soccerStats
     .getReferees()

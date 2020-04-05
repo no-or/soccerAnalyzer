@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Button from "@paprika/button";
 import GameModal from "./components/gameModal/gameModal";
 import ResultTable from "./components/resultTable/resultTable";
+import SelectionQuery from "./components/selectionQuery/selectionQuery";
 const { ipcRenderer } = require("electron");
 
 function App() {
@@ -103,6 +104,7 @@ function App() {
         onUpdate={id => onUpdate(id)}
         onDelete={id => onDelete(id)}
       />
+      <SelectionQuery leagues={leagues} />
       {/* <ResultTable results={results} />
       <ResultTable results={results} /> */}
     </div>

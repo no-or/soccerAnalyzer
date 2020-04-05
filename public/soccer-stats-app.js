@@ -51,11 +51,11 @@ const getClubs = req => {
     const orderBy = "ORDER BY league ASC, club ASC";
 
     let where = "WHERE club2.managerID = manager.managerID ";
-
-    if (typeof req.leagueName === "string") {
+    console.log("req: " + req);
+    if (typeof req.leagueName === "string" && req.leagueName !== "All") {
       where = where + `AND leagueName = '${req.leagueName}' `;
     }
-    if (typeof req.country === "string") {
+    if (typeof req.country === "string" && req.country !== "All") {
       where = where + `AND country = '${req.country}' `;
     }
 
