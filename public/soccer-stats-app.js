@@ -137,6 +137,34 @@ const getNumGamesPerClub = () => {
   return promise;
 };
 
+// Division
+const getClubsThatPlayedInAllLeagueLocations = () => {
+  const promise = new Promise((resolve, reject) => {
+    const division = "SELECT name " +
+                     "FROM club1 c1 natural join club2 c2 " +
+                     "WHERE NOT EXISTS " +
+                     "(SELECT location " +
+                     "FROM club1 natural join club2 " +
+                     "WHERE leagueName = c2.leagueName AND location " +
+                     "NOT IN " +
+                     "(SELECT location " +
+                     "FROM game1 natural join game2 " +
+                     "WHERE c1Name = c2.name OR c2Name = c2.name))";
+
+    connection.query(division, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const res = result.map(r => {
+          return { id: ID.randomUUID(), ...r };
+        });
+        resolve(res);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Player Functions */
 
 // Projection
