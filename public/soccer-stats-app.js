@@ -125,9 +125,7 @@ const getNumGamesPerClub = () => {
       if (error) {
         reject(error);
       } else {
-        console.log("getting nums games");
         const res = result.map(r => {
-          console.log(r);
           return { id: ID.randomUUID(), ...r };
         });
         resolve(res);
@@ -555,3 +553,6 @@ module.exports.updateGame = updateGame;
 module.exports.deleteGame = deleteGame;
 // referee functions
 module.exports.getReferees = getReferees;
+
+//division 
+module.exports.getClubsThatPlayedInAllLeagueLocations = getClubsThatPlayedInAllLeagueLocations

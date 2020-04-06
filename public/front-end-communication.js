@@ -184,3 +184,16 @@ ipcMain.on("getNumGamesPerClub", event => {
       console.log("Error: " + e);
     });
 });
+
+ipcMain.on("getClubsThatPlayedInAllLeagueLocations", event => {
+  soccerStats
+    .getClubsThatPlayedInAllLeagueLocations()
+    .then(res => {
+      event.reply("getClubsThatPlayedInAllLeagueLocationsReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+
