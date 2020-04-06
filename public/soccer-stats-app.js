@@ -208,6 +208,87 @@ const getPlayerInjuries = () => {
   return promise;
 };
 
+// Join
+const getPlayerPenalties = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT player.name AS playerName, player.number, cardColor, minuteInGame, c1Name, c2Name, ' + 
+                       'dateAndTime AS gameStartDate, leagueName, referee.name AS refereeName ' +
+                  'FROM player natural join penalty natural join game2 join referee ' +
+                  'WHERE penalty.refID = referee.refID';
+
+    connection.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const penalties = result.map(res => {
+          const { ...r } = res;
+          const penalty = {
+            id: ID.randomUUID(),
+            ...r
+          };
+          penalty.gameStartDate = new Date(penalty.gameStartDate).toUTCString();
+    
+          return penalty;
+        });
+        resolve(penalties);
+      }
+    });
+  });
+  return promise;
+};
+
+// Join
+const getGoalkeepers = () => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query("SELECT * FROM player natural join goalkeeper", (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const goalkeepers = result.map(res => {
+          const { name, ...r } = res;
+          const gk = {
+            id: r.playerID,
+            name: name,
+            ...r
+          };
+          delete gk.playerID;
+          gk.birthdate = new Date(gk.birthdate).toUTCString();
+
+          return gk;
+        });
+        resolve(goalkeepers);
+      }
+    });
+  });
+  return promise;
+};
+
+// Join
+const getFieldPlayers = () => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query("SELECT * FROM player natural join fieldPlayer", (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const fieldPlayers = result.map(res => {
+          const { name, ...r } = res;
+          const fp = {
+            id: r.playerID,
+            name: name,
+            ...r
+          };
+          delete fp.playerID;
+          fp.birthdate = new Date(fp.birthdate).toUTCString();
+
+          return fp;
+        });
+        resolve(fieldPlayers);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Game Functions */
 
 const getGames = () => {
@@ -436,6 +517,9 @@ module.exports.getNumGamesPerClub = getNumGamesPerClub;
 // player functions
 module.exports.getPlayers = getPlayers;
 module.exports.getPlayerInjuries = getPlayerInjuries;
+module.exports.getPlayerPenalties = getPlayerPenalties;
+module.exports.getGoalkeepers = getGoalkeepers;
+module.exports.getFieldPlayers = getFieldPlayers;
 // game functions
 module.exports.getGames = getGames;
 module.exports.insertGame = insertGame;
