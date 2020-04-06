@@ -51,7 +51,6 @@ ipcMain.on("getReferees", event => {
   soccerStats
     .getReferees()
     .then(res => {
-      console.log("getRefereesReply~~~~~~~~~~~~");
       event.reply("getRefereesReply", res);
     })
     .catch(e => {
@@ -60,8 +59,6 @@ ipcMain.on("getReferees", event => {
 });
 
 ipcMain.on("insertGame", (event, args) => {
-  // console.log("insert game");
-  // console.log(args);
   soccerStats
     .insertGame(args)
     .then(res => {
@@ -73,8 +70,6 @@ ipcMain.on("insertGame", (event, args) => {
 });
 
 ipcMain.on("deleteGame", (event, args) => {
-  console.log("delete game");
-  console.log(args);
   soccerStats
     .deleteGame(args)
     .then(res => {
@@ -86,8 +81,6 @@ ipcMain.on("deleteGame", (event, args) => {
 });
 
 ipcMain.on("updateGame", (event, args) => {
-  console.log("update game");
-  console.log(args);
   soccerStats
     .updateGame(args)
     .then(res => {
@@ -100,7 +93,6 @@ ipcMain.on("updateGame", (event, args) => {
 
 // selection
 ipcMain.on("getSelectClubs", (event, args) => {
-  console.log("get selcet: " + args);
   soccerStats
     .getClubs(args)
     .then(res => {
@@ -113,11 +105,9 @@ ipcMain.on("getSelectClubs", (event, args) => {
 
 // projection
 ipcMain.on("getProjectPlayers", (event, args) => {
-  console.log("get project: " + args);
   soccerStats
     .getPlayers(args)
     .then(res => {
-      console.log("ress: " + res);
       event.reply("getProjectPlayersReply", res);
     })
     .catch(e => {
@@ -128,7 +118,6 @@ ipcMain.on("getProjectPlayers", (event, args) => {
 
 //joins
 ipcMain.on("getPlayerInjuries", event => {
-  console.log("getting injuries");
   soccerStats
     .getPlayerInjuries()
     .then(res => {

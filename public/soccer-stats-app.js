@@ -125,7 +125,9 @@ const getNumGamesPerClub = () => {
       if (error) {
         reject(error);
       } else {
+        console.log("getting nums games");
         const res = result.map(r => {
+          console.log(r);
           return { id: ID.randomUUID(), ...r };
         });
         resolve(res);
