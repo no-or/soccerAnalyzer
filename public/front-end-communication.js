@@ -127,7 +127,6 @@ ipcMain.on("getProjectPlayers", (event, args) => {
 
 
 //joins
-
 ipcMain.on("getPlayerInjuries", event => {
   console.log("getting injuries");
   soccerStats
@@ -150,6 +149,7 @@ ipcMain.on("getPlayerPenalties", event => {
       console.log("Error: " + e);
     });
 });
+
 ipcMain.on("getGoalkeepers", event => {
   soccerStats
     .getGoalkeepers()
@@ -160,11 +160,36 @@ ipcMain.on("getGoalkeepers", event => {
       console.log("Error: " + e);
     });
 });
+
 ipcMain.on("getFieldPlayers", event => {
   soccerStats
     .getFieldPlayers()
     .then(res => {
       event.reply("getFieldPlayersReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+//aggregation
+
+ipcMain.on("getAvgGoalsPerPlayerPerClub", event => {
+  soccerStats
+    .getAvgGoalsPerPlayerPerClub()
+    .then(res => {
+      event.reply("getAvgGoalsPerPlayerPerClubReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+ipcMain.on("getNumGamesPerClub", event => {
+  soccerStats
+    .getNumGamesPerClub()
+    .then(res => {
+      event.reply("getNumGamesPerClubReply", res);
     })
     .catch(e => {
       console.log("Error: " + e);

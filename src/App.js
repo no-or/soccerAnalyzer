@@ -7,6 +7,8 @@ import ResultTable from "./components/resultTable/resultTable";
 import SelectionQuery from "./components/selectionQuery/selectionQuery";
 import ProjectionQuery from "./components/projectionQuery/projectionQuery";
 import JoinQuery from "./components/joinQuery/joinQuery";
+import AggregationQuery from "./components/aggregationQuery/aggregationQuery";
+import NestedAggregationQuery from "./components/nestedAggregationQuery/nestedAggregationQuery";
 const { ipcRenderer } = require("electron");
 
 function App() {
@@ -116,6 +118,12 @@ function App() {
       </div>
       <div style={{paddingBottom: '32px'}}>
         <JoinQuery />
+        </div>
+        <div style={{paddingBottom: '32px'}}>
+        <AggregationQuery />
+        </div>
+        <div style={{paddingBottom: '32px'}}>
+        <NestedAggregationQuery />
         </div>
     </div>
   );
