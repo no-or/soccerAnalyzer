@@ -481,21 +481,29 @@ VALUES
 INSERT INTO game1
     (dateAndTime, c1Name, c2Name, location, c1Score, c2Score)
 VALUES
-    ('2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'Anfield',                   1, 0),
-    ('2019-06-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'Santiago Bernabéu Stadium', 0, 3),
-    ('2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'Islington',                 0, 2),
-    ('2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'Camp Nou',                  0, 1),
-    ('2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Allianz Stadium',           1, 0);
+    ('2019-01-01 09:00:00.00', 'Liverpool FC',         'Arsenal FC',     'Anfield',                   1, 0),
+    ('2019-06-01 09:00:00.00', 'Real Madrid CF',       'FC Barcelona',   'Santiago Bernabéu Stadium', 0, 3),
+    ('2019-03-03 09:00:00.00', 'Arsenal FC',           'Liverpool FC',   'Islington',                 0, 2),
+    ('2019-09-04 09:00:00.00', 'FC Barcelona',         'Real Madrid CF', 'Camp Nou',                  0, 1),
+    ('2019-10-06 09:00:00.00', 'Juventus FC',          'FC Inter Milan', 'Allianz Stadium',           1, 0),
+    ('2019-04-05 09:00:00.00', 'Chelsea FC',           'Liverpool FC',   'Stamford Bridge',           1, 3),
+    ('2019-04-06 09:00:00.00', 'Leicester City FC',    'Liverpool FC',   'King Power Stadium',        1, 4),
+    ('2019-04-07 09:00:00.00', 'Manchester City FC',   'Liverpool FC',   'Etihad Stadium',            0, 1),
+    ('2019-04-08 09:00:00.00', 'Manchester United FC', 'Liverpool FC',   'Old Trafford',              0, 5);
 
 
 INSERT INTO game2
     (gameID, dateAndTime, c1Name, c2Name, leagueName)
 VALUES
-    ('000001', '2019-01-01 09:00:00.00', 'Liverpool FC',   'Arsenal FC',     'English Premier League'),
-    ('000002', '2019-06-01 09:00:00.00', 'Real Madrid CF', 'FC Barcelona',   'La Liga'),
-    ('000003', '2019-03-03 09:00:00.00', 'Arsenal FC',     'Liverpool FC',   'English Premier League'),
-    ('000004', '2019-09-04 09:00:00.00', 'FC Barcelona',   'Real Madrid CF', 'La Liga'),
-    ('000005', '2019-10-06 09:00:00.00', 'Juventus FC',    'FC Inter Milan', 'Serie A');
+    ('000001', '2019-01-01 09:00:00.00', 'Liverpool FC',         'Arsenal FC',     'English Premier League'),
+    ('000002', '2019-06-01 09:00:00.00', 'Real Madrid CF',       'FC Barcelona',   'La Liga'),
+    ('000003', '2019-03-03 09:00:00.00', 'Arsenal FC',           'Liverpool FC',   'English Premier League'),
+    ('000004', '2019-09-04 09:00:00.00', 'FC Barcelona',         'Real Madrid CF', 'La Liga'),
+    ('000005', '2019-10-06 09:00:00.00', 'Juventus FC',          'FC Inter Milan', 'Serie A'),
+    ('000006', '2019-04-05 09:00:00.00', 'Chelsea FC',           'Liverpool FC',   'English Premier League'),
+    ('000007', '2019-04-06 09:00:00.00', 'Leicester City FC',    'Liverpool FC',   'English Premier League'),
+    ('000008', '2019-04-07 09:00:00.00', 'Manchester City FC',   'Liverpool FC',   'English Premier League'),
+    ('000009', '2019-04-08 09:00:00.00', 'Manchester United FC', 'Liverpool FC',   'English Premier League');
 
 
 INSERT INTO officiates
@@ -505,7 +513,12 @@ VALUES
     ('0003', '000002'),
     ('0005', '000004'),
     ('0002', '000003'),
-    ('0004', '000005');
+    ('0004', '000005'),
+    ('0002', '000006'),
+    ('0003', '000007'),
+    ('0001', '000008'),
+    ('0004', '000009');
+
 
 
 INSERT INTO injury

@@ -94,10 +94,9 @@ const getClubLocations = () => {
 const getAvgGoalsPerPlayerPerClub = () => {
   const promise = new Promise((resolve, reject) => {
     const query =
-      "SELECT clubName, leagueName, AVG(goals) AS avgGoalsPerPlayer " +
+      "SELECT clubName, AVG(goals) AS avgGoalsPerPlayer " +
       "FROM player " +
-      "GROUP BY clubName " +
-      "ORDER BY leagueName";
+      "GROUP BY clubName ";
 
     connection.query(query, (error, result) => {
       if (error) {
