@@ -194,7 +194,6 @@ const getPlayers = req => {
             id: r.playerID,
             ...r
           };
-          delete player.playerID;
           if (player.hasOwnProperty("birthdate")) {
             player.birthdate = new Date(player.birthdate).toUTCString();
           }
@@ -277,7 +276,6 @@ const getGoalkeepers = () => {
             name: name,
             ...r
           };
-          delete gk.playerID;
           gk.birthdate = new Date(gk.birthdate).toUTCString();
 
           return gk;
@@ -303,7 +301,6 @@ const getFieldPlayers = () => {
             name: name,
             ...r
           };
-          delete fp.playerID;
           fp.birthdate = new Date(fp.birthdate).toUTCString();
 
           return fp;
@@ -335,7 +332,6 @@ const getGames = () => {
             dateAndTime: new Date(dateAndTime).toUTCString(),
             ...r
           };
-          delete game.gameID;
           return game;
         });
         resolve(res);
@@ -512,7 +508,6 @@ const getReferees = () => {
             birthdate: new Date(birthdate).toUTCString(),
             ...r
           };
-          delete ref.refID;
           return ref;
         });
         resolve(res);

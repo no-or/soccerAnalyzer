@@ -15,7 +15,6 @@ export default function SelectionQuery({ leagues }) {
   let countries = [
     "All",
     "England",
-    "USA",
     "France",
     "Spain",
     "Italy",
@@ -25,6 +24,16 @@ export default function SelectionQuery({ leagues }) {
   const [clubs, setClubs] = React.useState([]);
   const [league, setLeague] = React.useState("");
   const [country, setCountry] = React.useState("");
+
+  const [disabled, setDisabled] = React.useState(true);
+
+  React.useEffect(() => {
+    if (country === "" || league === "") {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [country, league])
 
   const selectClubs = () => {
     console.log("selecting clubs");
@@ -62,7 +71,7 @@ export default function SelectionQuery({ leagues }) {
       />
       </div>
       <span class="selection-label">Select clubs:</span>
-      <Button onClick={() => selectClubs()}>Select</Button>
+      <Button onClick={() => selectClubs()} isDisabled={disabled}>Select</Button>
       <ResultTable results={clubs} />
     </div>
   );

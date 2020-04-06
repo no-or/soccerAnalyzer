@@ -31,6 +31,16 @@ export default function ProjectionQuery({ clubs }) {
   const [club, setClub] = React.useState("");
   const [checkboxState, setCheckboxState] = React.useState([]);
   const [checkboxStateString, setCheckboxStateString] = React.useState("");
+  const [disabled, setDisabled] = React.useState(true);
+
+  React.useEffect(() =>{
+  let ts = checkboxState.filter((state) => state);
+  if (ts.length === 0 || club === "") {
+    setDisabled(true);
+  } else {
+    setDisabled(false);
+  }
+  }, [checkboxStateString])
 
   const [players, setPlayers] = React.useState([]);
   React.useEffect(() => {
@@ -108,7 +118,7 @@ export default function ProjectionQuery({ clubs }) {
       </div>
       <div class="projection-button">
       <span class="projection-label"> Projection on player:</span>
-      <Button onClick={() => projectPlayers()}>Project</Button>
+      <Button onClick={() => projectPlayers()}  isDisabled={disabled}>Project</Button>
       </div>
       <ResultTable results={players} />
     </div>
