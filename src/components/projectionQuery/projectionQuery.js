@@ -3,6 +3,7 @@ import SelectItem from "../selectItem/selectItem";
 import Checkbox from "@paprika/checkbox";
 import Button from "@paprika/button";
 import ResultTable from "../resultTable/resultTable";
+import './projectionQuery.css'
 
 const { ipcRenderer } = require("electron");
 
@@ -86,8 +87,16 @@ export default function ProjectionQuery({ clubs }) {
   }, [clubs]);
 
   return (
-    <div>
-      <h3>Project player fields:</h3>
+    <div> 
+      <h3>Projection on player fields:</h3>
+      <h4>Choose projection fields:</h4>
+      <PlayerFieldCheckboxs
+        fields={fields}
+        checkboxState={checkboxState}
+        checkboxStateString={checkboxStateString}
+        handleChange={handleChange}
+      />
+      <div class="projection-button">
       <SelectItem
         category="Club"
         items={clubNames}
@@ -96,15 +105,11 @@ export default function ProjectionQuery({ clubs }) {
           setClub(selectedClub);
         }}
       />
-      <h4>Choose projection fields:</h4>
-      <PlayerFieldCheckboxs
-        fields={fields}
-        checkboxState={checkboxState}
-        checkboxStateString={checkboxStateString}
-        handleChange={handleChange}
-      />
-      <span style={{ paddingLeft: "8px" }}> Projection on player:</span>
+      </div>
+      <div class="projection-button">
+      <span class="projection-label"> Projection on player:</span>
       <Button onClick={() => projectPlayers()}>Project</Button>
+      </div>
       <ResultTable results={players} />
     </div>
   );

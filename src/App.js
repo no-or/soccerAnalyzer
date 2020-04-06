@@ -85,7 +85,8 @@ function App() {
   };
 
   return (
-    <div style={{ backgroundColor: "white" }}>
+    <div style={{ backgroundColor: "white", padding: '56px' }}>
+      <div style={{paddingBottom: '32px'}}>
       <h3>Insert, update and delete games:</h3>
       <div style={{ padding: "8px" }}>
         <span>Insert a New Game: </span>
@@ -105,10 +106,13 @@ function App() {
         onUpdate={id => onUpdate(id)}
         onDelete={id => onDelete(id)}
       />
+      </div>
+      <div style={{paddingBottom: '32px'}}>
       <SelectionQuery leagues={leagues} />
+      </div>
+      <div style={{paddingBottom: '32px'}}>
       <ProjectionQuery clubs={clubs} />
-      {/* <ResultTable results={results} />
-      <ResultTable results={results} /> */}
+      </div>
     </div>
   );
 }
