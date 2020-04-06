@@ -535,6 +535,7 @@ module.exports.getClubLocations = getClubLocations;
 module.exports.getClubs = getClubs;
 module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
 module.exports.getNumGamesPerClub = getNumGamesPerClub;
+module.exports.getClubsThatPlayedInAllLeagueLocations = getClubsThatPlayedInAllLeagueLocations;
 // player functions
 module.exports.getPlayers = getPlayers;
 module.exports.getPlayerInjuries = getPlayerInjuries;
@@ -548,6 +549,3 @@ module.exports.updateGame = updateGame;
 module.exports.deleteGame = deleteGame;
 // referee functions
 module.exports.getReferees = getReferees;
-
-//division 
-module.exports.getClubsThatPlayedInAllLeagueLocations = getClubsThatPlayedInAllLeagueLocations
