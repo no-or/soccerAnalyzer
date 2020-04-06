@@ -40,7 +40,7 @@ export default function ProjectionQuery({ clubs }) {
   } else {
     setDisabled(false);
   }
-  }, [checkboxStateString])
+  }, [checkboxStateString, club])
 
   const [players, setPlayers] = React.useState([]);
   React.useEffect(() => {
