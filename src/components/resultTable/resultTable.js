@@ -58,8 +58,8 @@ export default function ResultTable({ results, onUpdate, onDelete }) {
               onUpdate={onUpdate}
               onDelete={onDelete}
             />
-            {onUpdate && <th key={results.length}>UPDATE</th>}
-            {onDelete && <th key={results.length}>DELETE</th>}
+            {onUpdate && <th>UPDATE</th>}
+            {onDelete && <th>DELETE</th>}
           </tr>
           <TableData
             results={results}

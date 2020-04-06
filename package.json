@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@paprika/button": "^0.2.19",
+    "@paprika/checkbox": "^0.2.9",
     "@paprika/date-picker": "^0.5.22",
     "@paprika/dropdown-menu": "^2.0.17",
     "@paprika/input": "^0.2.19",
