@@ -10,7 +10,7 @@ export default function NestedAggregationQuery() {
   const [numGames, setNumGames] = React.useState([]);
 
   React.useEffect(() => {
-    ipcRenderer.on("getNumGamesPerClub", (event, data) => {
+    ipcRenderer.on("getNumGamesPerClubReply", (event, data) => {
       setNumGames(data);
     });
   }, [])

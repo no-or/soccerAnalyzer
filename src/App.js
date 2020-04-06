@@ -9,6 +9,7 @@ import ProjectionQuery from "./components/projectionQuery/projectionQuery";
 import JoinQuery from "./components/joinQuery/joinQuery";
 import AggregationQuery from "./components/aggregationQuery/aggregationQuery";
 import NestedAggregationQuery from "./components/nestedAggregationQuery/nestedAggregationQuery";
+import DivisonQuery from "./components/divisionQuery/divisionQuery";
 const { ipcRenderer } = require("electron");
 
 function App() {
@@ -124,6 +125,9 @@ function App() {
         </div>
         <div style={{paddingBottom: '32px'}}>
         <NestedAggregationQuery />
+        </div>
+        <div style={{paddingBottom: '32px'}}>
+        <DivisonQuery />
         </div>
     </div>
   );
