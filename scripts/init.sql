@@ -172,7 +172,7 @@ CREATE TABLE penalty
     playerID VARCHAR(7),
     gameID VARCHAR(7),
     refID VARCHAR(7),
-    timeInGame INTEGER,
+    minuteInGame INTEGER,
     cardColor VARCHAR(7) NOT NULL,
     PRIMARY KEY (playerID, gameID, refID),
     FOREIGN KEY (playerID)
@@ -511,21 +511,21 @@ VALUES
 INSERT INTO injury
     (playerID, dateAndTime, duration, type)
 VALUES
-    ('0102', '2019-01-02', 2628000, 'Knee'),
-    ('0204', '2019-02-25', 4000000, 'Foot'),
-    ('0306', '2019-05-04', 623500,  'Leg'),
-    ('0902', '2019-06-09', 1000000, 'Head'),
-    ('0607', '2019-07-10', 3200000, 'Back');
+    ('0102', '2019-01-02', 7, 'Knee'),
+    ('0204', '2019-02-25', 2, 'Foot'),
+    ('0306', '2019-05-04', 30,  'Leg'),
+    ('0902', '2019-06-09', 5, 'Head'),
+    ('0607', '2019-07-10', 7, 'Back');
 
 
 INSERT INTO penalty
-    (playerID, gameID, refID, timeInGame, cardColor)
+    (playerID, gameID, refID, minuteInGame, cardColor)
 VALUES
-    ('0108', '000001', '0001', 5300, 'yellow'),
-    ('1402', '000002', '0003', 2500, 'yellow'),
-    ('0403', '000003', '0002', 1000, 'yellow'),
-    ('1302', '000004', '0005', 3630, 'yellow'),
-    ('0902', '000005', '0004', 2000, 'red');
+    ('0108', '000001', '0001', 53, 'yellow'),
+    ('1402', '000002', '0003', 25, 'yellow'),
+    ('0403', '000003', '0002', 10, 'yellow'),
+    ('1302', '000004', '0005', 36, 'yellow'),
+    ('0902', '000005', '0004', 20, 'red');
 
 
 COMMIT;

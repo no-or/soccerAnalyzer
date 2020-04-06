@@ -4,7 +4,7 @@ const ShortUniqueId = require("short-unique-id").default;
 
 console.log("running soccer stats BE");
 //Create connection
-let con = mysql.createConnection({
+let connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "1122334455",
@@ -12,7 +12,8 @@ let con = mysql.createConnection({
   port: 3308
 });
 
-con.connect(err => {
+connection.connect((err) => {
+
   if (err) {
     throw err;
   }
@@ -26,7 +27,7 @@ const ID = new ShortUniqueId();
 
 const getLeagues = () => {
   const promise = new Promise((resolve, reject) => {
-    con.query("SELECT * FROM league", (error, result) => {
+    connection.query('SELECT * FROM league', (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -51,7 +52,6 @@ const getClubs = req => {
     const orderBy = "ORDER BY league ASC, club ASC";
 
     let where = "WHERE club2.managerID = manager.managerID ";
-    console.log("req: " + req);
     if (typeof req.leagueName === "string" && req.leagueName !== "All") {
       where = where + `AND leagueName = '${req.leagueName}' `;
     }
@@ -60,8 +60,7 @@ const getClubs = req => {
     }
 
     const query = select + from + where + orderBy;
-
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -77,7 +76,7 @@ const getClubs = req => {
 
 const getClubLocations = () => {
   const promise = new Promise((resolve, reject) => {
-    con.query("SELECT DISTINCT location FROM club1", (error, result) => {
+    connection.query('SELECT DISTINCT location FROM club1', (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -100,7 +99,7 @@ const getAvgGoalsPerPlayerPerClub = () => {
       "GROUP BY clubName " +
       "ORDER BY leagueName";
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -124,7 +123,7 @@ const getNumGamesPerClub = () => {
       "GROUP BY club2.name " +
       "ORDER BY club2.leagueName";
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -150,7 +149,6 @@ const getPlayers = req => {
     const orderBy = "ORDER BY playerID ASC";
 
     let select = "SELECT ";
-
     for (let i = 0; i < fields.length; i++) {
       if (i !== fields.length - 1) {
         select = select + fields[i] + ", ";
@@ -160,7 +158,7 @@ const getPlayers = req => {
     }
 
     const query = select + from + where + orderBy;
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -183,16 +181,124 @@ const getPlayers = req => {
   return promise;
 };
 
+// Join
+const getPlayerInjuries = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT name, type, duration AS durationDays, clubName, leagueName, dateAndTime AS injuryDate ' +
+                  'FROM player natural join injury';
+
+    connection.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const injuries = result.map(res => {
+          const { ...r } = res;
+          const injury = {
+            id: ID.randomUUID(),
+            ...r
+          };
+          injury.injuryDate = new Date(injury.injuryDate).toUTCString();
+    
+          return injury;
+        });
+        resolve(injuries);
+      }
+    });
+  });
+  return promise;
+};
+
+// Join
+const getPlayerPenalties = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT player.name AS playerName, player.number, cardColor, minuteInGame, c1Name, c2Name, ' + 
+                       'dateAndTime AS gameStartDate, leagueName, referee.name AS refereeName ' +
+                  'FROM player natural join penalty natural join game2 join referee ' +
+                  'WHERE penalty.refID = referee.refID';
+
+    connection.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const penalties = result.map(res => {
+          const { ...r } = res;
+          const penalty = {
+            id: ID.randomUUID(),
+            ...r
+          };
+          penalty.gameStartDate = new Date(penalty.gameStartDate).toUTCString();
+    
+          return penalty;
+        });
+        resolve(penalties);
+      }
+    });
+  });
+  return promise;
+};
+
+// Join
+const getGoalkeepers = () => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query("SELECT * FROM player natural join goalkeeper", (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const goalkeepers = result.map(res => {
+          const { name, ...r } = res;
+          const gk = {
+            id: r.playerID,
+            name: name,
+            ...r
+          };
+          delete gk.playerID;
+          gk.birthdate = new Date(gk.birthdate).toUTCString();
+
+          return gk;
+        });
+        resolve(goalkeepers);
+      }
+    });
+  });
+  return promise;
+};
+
+// Join
+const getFieldPlayers = () => {
+  const promise = new Promise((resolve, reject) => {
+    connection.query("SELECT * FROM player natural join fieldPlayer", (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const fieldPlayers = result.map(res => {
+          const { name, ...r } = res;
+          const fp = {
+            id: r.playerID,
+            name: name,
+            ...r
+          };
+          delete fp.playerID;
+          fp.birthdate = new Date(fp.birthdate).toUTCString();
+
+          return fp;
+        });
+        resolve(fieldPlayers);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Game Functions */
 
 const getGames = () => {
   let promise = new Promise((resolve, reject) => {
     const query =
       "SELECT gameID, dateAndTime, c1Name AS club1, c2Name AS club2, c1Score AS club1Score, " +
-      "c2Score AS club2Score, leagueName AS league, location, referee.name AS refereeName " +
+             "c2Score AS club2Score, leagueName AS league, location, referee.name AS refereeName " +
       "FROM game1 natural join game2 natural join officiates natural join referee";
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -216,16 +322,7 @@ const getGames = () => {
 // Insert
 const insertGame = data => {
   const promise = new Promise((resolve, reject) => {
-    const {
-      dateAndTime,
-      c1Name,
-      c2Name,
-      location,
-      c1Score,
-      c2Score,
-      leagueName,
-      refID
-    } = data;
+    const {dateAndTime, c1Name, c2Name, location, c1Score, c2Score, leagueName, refID} = data;
     const gameID = ID.randomUUID();
 
     const game1Insert =
@@ -240,16 +337,16 @@ const insertGame = data => {
       `INSERT INTO officiates (refID, gameID) ` +
       `VALUES ('${refID}', '${gameID}')`;
 
-    con.query(game1Insert, (error, result) => {
-      if (error) reject(error);
+    connection.query(game1Insert, (error, result) => {
+      if (error) reject(error); 
     });
 
-    con.query(game2Insert, (error, result) => {
-      if (error) reject(error);
+    connection.query(game2Insert, (error, result) => {
+      if (error) reject(error); 
     });
 
-    con.query(officiatesInsert, (error, result) => {
-      if (error) reject(error);
+    connection.query(officiatesInsert, (error, result) => {
+      if (error) reject(error); 
     });
     resolve("Game inserted");
   });
@@ -272,7 +369,7 @@ const updateGame = data => {
 
     // need to get old game2 because the old dateAndTime + c1Name + c2Name is the PK for game1
     const findGame2 = `SELECT * FROM game2 WHERE gameID = '${gameID}'`;
-    con.query(findGame2, (error, result) => {
+    connection.query(findGame2, (error, result) => {
       if (error) reject(error);
 
       const findResult = result.map(res => {
@@ -287,39 +384,32 @@ const updateGame = data => {
       });
 
       // since javascript automatically converts dateTime objects I need to construct my own string
-      const formattedDate = convertToMySqlFormat(
-        new Date(findResult[0].dateAndTime)
-      );
+      const formattedDate = convertToMySqlFormat(new Date(findResult[0].dateAndTime));
 
       const game1Set =
         `SET dateAndTime = '${dateAndTime}', c1Name = '${c1Name}', c2Name = '${c2Name}', ` +
-        `
-                            location = '${location}', c1Score = ${c1Score}, c2Score = ${c2Score} `;
+            `location = '${location}', c1Score = ${c1Score}, c2Score = ${c2Score} `;
 
-      const game1Update =
-        "UPDATE game1 " +
-        game1Set +
+      const game1Update = 
+        "UPDATE game1 " + game1Set +
         `WHERE dateAndTime = '${formattedDate}' AND ` +
-        `c1Name = '${findResult[0].c1Name}' AND ` +
-        `c2Name = '${findResult[0].c2Name}'`;
+              `c1Name = '${findResult[0].c1Name}' AND ` +
+              `c2Name = '${findResult[0].c2Name}'`;
 
-      const game2Set =
-        `SET dateAndTime = '${dateAndTime}', c1Name = '${c1Name}', c2Name = '${c2Name}', ` +
-        `leagueName = '${leagueName}' `;
+      const game2Set = `SET dateAndTime = '${dateAndTime}', c1Name = '${c1Name}', c2Name = '${c2Name}', ` +
+                           `leagueName = '${leagueName}' `;
 
-      const game2Update =
-        "UPDATE game2 " + game2Set + `WHERE gameID = '${gameID}'`;
+      const game2Update = "UPDATE game2 " + game2Set + `WHERE gameID = '${gameID}'`;
 
-      con.query(game1Update, (error, result) => {
+      connection.query(game1Update, (error, result) => {
         if (error) reject(error);
 
-        con.query(game2Update, (error, result) => {
+        connection.query(game2Update, (error, result) => {
           if (error) reject(error);
           resolve("Game updated");
         });
       });
     });
-    // resolve("Game updated");
   });
   return promise;
 };
@@ -330,7 +420,7 @@ const deleteGame = gameID => {
     const findGame2 = `SELECT * FROM game2 WHERE gameID = '${gameID}'`;
     const deleteGame2 = `DELETE FROM game2 WHERE gameID = '${gameID}'`;
 
-    con.query(findGame2, (error, result) => {
+    connection.query(findGame2, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -346,25 +436,22 @@ const deleteGame = gameID => {
         });
 
         // since javascript automatically converts dateTime objects I need to construct my own string
-        const formattedDate = convertToMySqlFormat(
-          new Date(findResult[0].dateAndTime)
-        );
+        const formattedDate = convertToMySqlFormat(new Date(findResult[0].dateAndTime));
 
-        const deleteGame1 =
-          `DELETE FROM game1 WHERE dateAndTime = '${formattedDate}' AND ` +
-          `c1Name = '${findResult[0].c1Name}' AND ` +
-          `c2Name = '${findResult[0].c2Name}'`;
+        const deleteGame1 = `DELETE FROM game1 WHERE dateAndTime = '${formattedDate}' AND ` +
+                                        `c1Name = '${findResult[0].c1Name}' AND ` +
+                                        `c2Name = '${findResult[0].c2Name}'`;
 
         // cascades to remove corresponding tuple from 'officiates' table
         let promise1 = new Promise((resolve1, reject1) => {
-          con.query(deleteGame1, (error, result) => {
+          connection.query(deleteGame1, (error, result) => {
             if (error) return reject1(error);
             return resolve1("Game1 Deleted");
           });
         });
 
         let promise2 = new Promise((resolve2, reject2) => {
-          con.query(deleteGame2, (error, result) => {
+          connection.query(deleteGame2, (error, result) => {
             if (error) return reject2(error);
             return resolve2("Game2 Deleted");
           });
@@ -386,9 +473,9 @@ const deleteGame = gameID => {
 /* Referee Functions */
 
 const getReferees = () => {
-  console.log("Callled!!!!!");
   const promise = new Promise((resolve, reject) => {
-    con.query("SELECT * FROM referee", (error, result) => {
+    connection.query('SELECT * FROM referee', (error, result) => {
+
       if (error) {
         reject(error);
       } else {
@@ -411,30 +498,32 @@ const getReferees = () => {
 
 const convertToMySqlFormat = time => {
   const year = time.getFullYear();
-  const month =
-    time.getMonth() + 1 > 9 ? time.getMonth() + 1 : "0" + (time.getMonth() + 1);
+  const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : "0" + (time.getMonth() + 1);
   const day = time.getDate() > 9 ? time.getDate() : "0" + time.getDate();
   const hour = time.getHours() > 9 ? time.getHours() : "0" + time.getHours();
-  const minutes =
-    time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes();
-  const seconds =
-    time.getSeconds() > 9 ? time.getSeconds() : "0" + time.getSeconds();
+  const minutes = time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes();
+  const seconds = time.getSeconds() > 9 ? time.getSeconds() : "0" + time.getSeconds();
 
-  return (
-    year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds
-  );
+  return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
 };
 
-module.exports.getGames = getGames;
+// league functions
 module.exports.getLeagues = getLeagues;
+// club functions
 module.exports.getClubLocations = getClubLocations;
 module.exports.getClubs = getClubs;
 module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
 module.exports.getNumGamesPerClub = getNumGamesPerClub;
+// player functions
 module.exports.getPlayers = getPlayers;
-
+module.exports.getPlayerInjuries = getPlayerInjuries;
+module.exports.getPlayerPenalties = getPlayerPenalties;
+module.exports.getGoalkeepers = getGoalkeepers;
+module.exports.getFieldPlayers = getFieldPlayers;
+// game functions
+module.exports.getGames = getGames;
 module.exports.insertGame = insertGame;
 module.exports.updateGame = updateGame;
 module.exports.deleteGame = deleteGame;
-
+// referee functions
 module.exports.getReferees = getReferees;
