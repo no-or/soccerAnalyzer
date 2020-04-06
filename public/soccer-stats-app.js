@@ -4,7 +4,7 @@ const ShortUniqueId = require("short-unique-id").default;
 
 console.log("running soccer stats BE");
 //Create connection
-var con = mysql.createConnection({
+var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "1122334455",
@@ -12,7 +12,7 @@ var con = mysql.createConnection({
   // port: 3308
 });
 
-con.connect((err) => {
+connection.connect((err) => {
   if (err) {
     throw err;
   }
@@ -26,7 +26,7 @@ const ID = new ShortUniqueId();
 
 const getLeagues = () => {
   const promise = new Promise((resolve, reject) => {
-    con.query('SELECT * FROM league', (error, result) => {
+    connection.query('SELECT * FROM league', (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -62,7 +62,7 @@ const getClubs = (req) => {
 
     const query = select + from + where + orderBy;
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -78,7 +78,7 @@ const getClubs = (req) => {
 
 const getClubLocations = () => {
   const promise = new Promise((resolve, reject) => {
-    con.query('SELECT DISTINCT location FROM club1', (error, result) => {
+    connection.query('SELECT DISTINCT location FROM club1', (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -100,7 +100,7 @@ const getAvgGoalsPerPlayerPerClub = () => {
                   'GROUP BY clubName ' +
                   'ORDER BY leagueName';
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -121,7 +121,7 @@ const getNumGamesPerClub = () => {
                   'GROUP BY club2.name ' +
                   'ORDER BY club2.leagueName';
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -178,6 +178,33 @@ const getPlayers = (req) => {
   return promise;
 };
 
+// Join
+const getPlayerInjuries = () => {
+  const promise = new Promise((resolve, reject) => {
+    const query = 'SELECT name, type, duration AS durationDays, clubName, leagueName, dateAndTime AS injuryDate ' +
+                  'FROM player natural join injury';
+
+    connection.query(query, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        const injuries = result.map(res => {
+          const { ...r } = res;
+          const injury = {
+            id: ID.randomUUID(),
+            ...r
+          };
+          injury.injuryDate = new Date(injury.injuryDate).toUTCString();
+    
+          return injury;
+        });
+        resolve(injuries);
+      }
+    });
+  });
+  return promise;
+};
+
 /* Game Functions */
 
 const getGames = () => {
@@ -186,7 +213,7 @@ const getGames = () => {
                          'c2Score AS club2Score, leagueName AS league, location, referee.name AS refereeName ' +
                   'FROM game1 natural join game2 natural join officiates natural join referee';
 
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -222,15 +249,15 @@ const insertGame = (data) => {
     const officiatesInsert = `INSERT INTO officiates (refID, gameID) ` +
                             `VALUES ('${refID}', '${gameID}')`;
 
-    con.query(game1Insert, (error, result) => {
+    connection.query(game1Insert, (error, result) => {
       if (error) reject(error); 
     });
 
-    con.query(game2Insert, (error, result) => {
+    connection.query(game2Insert, (error, result) => {
       if (error) reject(error); 
     });
 
-    con.query(officiatesInsert, (error, result) => {
+    connection.query(officiatesInsert, (error, result) => {
       if (error) reject(error); 
     });
     resolve('Game inserted');
@@ -293,7 +320,7 @@ const deleteGame = (gameID) => {
     const findGame2 = `SELECT * FROM game2 WHERE gameID = '${req.params.gameID}'`;
     const deleteGame2 = `DELETE FROM game2 WHERE gameID = '${req.params.gameID}'`;
 
-    con.query(findGame2, (error, result) => {
+    connection.query(findGame2, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -334,7 +361,7 @@ const deleteGame = (gameID) => {
 
 const getReferees = () => {
   const promise = new Promise((resolve, reject) => {
-    con.query('SELECT * FROM referee', (error, result) => {
+    connection.query('SELECT * FROM referee', (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -374,6 +401,7 @@ module.exports.getAvgGoalsPerPlayerPerClub = getAvgGoalsPerPlayerPerClub;
 module.exports.getNumGamesPerClub = getNumGamesPerClub;
 
 module.exports.getPlayers = getPlayers;
+module.exports.getPlayerInjuries = getPlayerInjuries;
 
 module.exports.getGames = getGames;
 module.exports.insertGame = insertGame;
