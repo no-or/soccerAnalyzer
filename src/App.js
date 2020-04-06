@@ -6,6 +6,7 @@ import GameModal from "./components/gameModal/gameModal";
 import ResultTable from "./components/resultTable/resultTable";
 import SelectionQuery from "./components/selectionQuery/selectionQuery";
 import ProjectionQuery from "./components/projectionQuery/projectionQuery";
+import JoinQuery from "./components/joinQuery/joinQuery";
 const { ipcRenderer } = require("electron");
 
 function App() {
@@ -113,6 +114,9 @@ function App() {
       <div style={{paddingBottom: '32px'}}>
       <ProjectionQuery clubs={clubs} />
       </div>
+      <div style={{paddingBottom: '32px'}}>
+        <JoinQuery />
+        </div>
     </div>
   );
 }

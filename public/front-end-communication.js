@@ -124,3 +124,49 @@ ipcMain.on("getProjectPlayers", (event, args) => {
       console.log("Error: " + e);
     });
 });
+
+
+//joins
+
+ipcMain.on("getPlayerInjuries", event => {
+  console.log("getting injuries");
+  soccerStats
+    .getPlayerInjuries()
+    .then(res => {
+      event.reply("getPlayerInjuriesReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+
+ipcMain.on("getPlayerPenalties", event => {
+  soccerStats
+    .getPlayerPenalties()
+    .then(res => {
+      event.reply("getPlayerPenaltiesReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+ipcMain.on("getGoalkeepers", event => {
+  soccerStats
+    .getGoalkeepers()
+    .then(res => {
+      event.reply("getGoalkeepersReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
+ipcMain.on("getFieldPlayers", event => {
+  soccerStats
+    .getFieldPlayers()
+    .then(res => {
+      event.reply("getFieldPlayersReply", res);
+    })
+    .catch(e => {
+      console.log("Error: " + e);
+    });
+});
