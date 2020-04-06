@@ -1,0 +1,15 @@
+.projection-button {
+  white-space: nowrap;
+  overflow-x: auto;
+  /* padding-right: 8px; */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* max-width: 40%; */
+  /* justify-content: space-between; */
+}
+
+.projection-label{
+  padding-left: 8px;
+  padding-right: 8px;
+}

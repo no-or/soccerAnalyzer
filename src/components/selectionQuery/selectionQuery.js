@@ -2,6 +2,8 @@ import React from "react";
 import SelectItem from "../selectItem/selectItem";
 import ResultTable from "../resultTable/resultTable";
 import Button from "@paprika/button";
+import "./selectionQuery.css";
+
 const { ipcRenderer } = require("electron");
 
 export default function SelectionQuery({ leagues }) {
@@ -20,7 +22,7 @@ export default function SelectionQuery({ leagues }) {
     "Germany"
   ];
   const [leagueNames, setLeagueNames] = React.useState([""]);
-  const [clubs, setClubs] = React.useState([""]);
+  const [clubs, setClubs] = React.useState([]);
   const [league, setLeague] = React.useState("");
   const [country, setCountry] = React.useState("");
 
@@ -39,6 +41,7 @@ export default function SelectionQuery({ leagues }) {
     <div>
       <h3>Select clubs by country and league:</h3>
       <h4>Choose filter conditions:</h4>
+      <div class="selection-button">
       <SelectItem
         category="Country"
         items={countries}
@@ -47,6 +50,8 @@ export default function SelectionQuery({ leagues }) {
           setCountry(selectedCountry);
         }}
       />
+      </div>
+      <div class="selection-button">
       <SelectItem
         category="League"
         items={leagueNames}
@@ -55,7 +60,8 @@ export default function SelectionQuery({ leagues }) {
           setLeague(selectedLeague);
         }}
       />
-      <span style={{ paddingLeft: "8px" }}>Select clubs:</span>
+      </div>
+      <span class="selection-label">Select clubs:</span>
       <Button onClick={() => selectClubs()}>Select</Button>
       <ResultTable results={clubs} />
     </div>
