@@ -116,11 +116,10 @@ const getAvgGoalsPerPlayerPerClub = () => {
 const getNumGamesPerClub = () => {
   const promise = new Promise((resolve, reject) => {
     const query =
-      "SELECT club2.name, club2.leagueName AS league, COUNT(gameID) AS gamesPlayed " +
+      "SELECT club2.name, COUNT(gameID) AS gamesPlayed " +
       "FROM club2, game2 " +
       "WHERE c1Name = club2.name OR c2Name = club2.name " +
-      "GROUP BY club2.name " +
-      "ORDER BY club2.leagueName";
+      "GROUP BY club2.name ";
 
     connection.query(query, (error, result) => {
       if (error) {
