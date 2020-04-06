@@ -554,6 +554,3 @@ module.exports.updateGame = updateGame;
 module.exports.deleteGame = deleteGame;
 // referee functions
 module.exports.getReferees = getReferees;
-
-//division 
-module.exports.getClubsThatPlayedInAllLeagueLocations = getClubsThatPlayedInAllLeagueLocations
