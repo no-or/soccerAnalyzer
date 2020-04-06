@@ -201,7 +201,8 @@ VALUES
     ('La Liga',                'Spain',   1929),
     ('Bundesliga',             'Germany', 1963),
     ('Serie A',                'Italy',   1898),
-    ('Ligue 1',                'France',  1930);
+    ('Ligue 1',                'France',  1930),
+    ('EFL Championship',       'England', 2004);
 
 
 INSERT INTO manager
@@ -220,7 +221,8 @@ VALUES
     ('0011', 'Thomas Tuchel',        234, 99,  86),
     ('0012', 'André Villas-Boas',    240, 78,  75),
     ('0013', 'Quique Setién',        194, 171, 144),
-    ('0014', 'Zinedine Zidane',      149, 38 , 52);
+    ('0014', 'Zinedine Zidane',      149, 38 , 52),
+    ('0015', 'Marcelo Bielsa',       174, 116, 76);
     
 
 INSERT INTO club1
@@ -239,7 +241,8 @@ VALUES
     ('Paris Saint-Germain FC',    'France',  'Parc des Princes'),
     ('Olympique de Marseille FC', 'France',  'Orange Vélodrome'),
     ('FC Barcelona',              'Spain',   'Camp Nou'),
-    ('Real Madrid CF',            'Spain',   'Santiago Bernabéu Stadium');
+    ('Real Madrid CF',            'Spain',   'Santiago Bernabéu Stadium'),
+    ('Leeds United FC',           'England', 'Elland Road');
 
 
 INSERT INTO club2
@@ -258,7 +261,8 @@ VALUES
     ('Paris Saint-Germain FC',    '0011', 'Ligue 1',                'France'),
     ('Olympique de Marseille FC', '0012', 'Ligue 1',                'France'),
     ('FC Barcelona',              '0013', 'La Liga',                'Spain'),
-    ('Real Madrid CF',            '0014', 'La Liga',                'Spain');
+    ('Real Madrid CF',            '0014', 'La Liga',                'Spain'),
+    ('Leeds United FC',           '0015', 'EFL Championship',       'England');
 
 
 INSERT INTO player
