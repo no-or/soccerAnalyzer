@@ -158,7 +158,7 @@ const getPlayers = req => {
     }
 
     const query = select + from + where + orderBy;
-    con.query(query, (error, result) => {
+    connection.query(query, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -288,7 +288,7 @@ const updateGame = data => {
 
     // need to get old game2 because the old dateAndTime + c1Name + c2Name is the PK for game1
     const findGame2 = `SELECT * FROM game2 WHERE gameID = '${gameID}'`;
-    con.query(findGame2, (error, result) => {
+    connection.query(findGame2, (error, result) => {
       if (error) reject(error);
 
       const findResult = result.map(res => {
@@ -320,10 +320,10 @@ const updateGame = data => {
 
       const game2Update = "UPDATE game2 " + game2Set + `WHERE gameID = '${gameID}'`;
 
-      con.query(game1Update, (error, result) => {
+      connection.query(game1Update, (error, result) => {
         if (error) reject(error);
 
-        con.query(game2Update, (error, result) => {
+        connection.query(game2Update, (error, result) => {
           if (error) reject(error);
           resolve("Game updated");
         });
@@ -363,14 +363,14 @@ const deleteGame = gameID => {
 
         // cascades to remove corresponding tuple from 'officiates' table
         let promise1 = new Promise((resolve1, reject1) => {
-          con.query(deleteGame1, (error, result) => {
+          connection.query(deleteGame1, (error, result) => {
             if (error) return reject1(error);
             return resolve1("Game1 Deleted");
           });
         });
 
         let promise2 = new Promise((resolve2, reject2) => {
-          con.query(deleteGame2, (error, result) => {
+          connection.query(deleteGame2, (error, result) => {
             if (error) return reject2(error);
             return resolve2("Game2 Deleted");
           });
